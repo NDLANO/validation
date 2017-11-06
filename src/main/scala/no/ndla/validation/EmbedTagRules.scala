@@ -72,6 +72,7 @@ object ResourceType extends Enumeration {
   val Kahoot = Value("kahoot")
   val KhanAcademy = Value("khan-academy")
   val FootNote = Value("footnote")
+  val RelatedContent = Value("related-content")
 
   def all: Set[String] = ResourceType.values.map(_.toString)
 
@@ -103,6 +104,7 @@ object Attributes extends Enumeration {
   val DataEdition = Value("data-edition")
   val DataPublisher = Value("data-publisher")
   val DataAuthors = Value("data-authors")
+  val DataArticleIds = Value("data-article-ids")
 
   val DataUpperLeftY =  Value("data-upper-left-y")
   val DataUpperLeftX = Value("data-upper-left-x")
