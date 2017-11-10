@@ -95,6 +95,7 @@ object Attributes extends Enumeration {
   val DataVideoId = Value("data-videoid")
   val DataResource = Value("data-resource")
   val DataLinkText = Value("data-link-text")
+  val DataOpenIn = Value("data-open-in")
   val DataContentId = Value("data-content-id")
   val DataNRKVideoId = Value("data-nrk-video-id")
   val DataResource_Id = Value("data-resource_id")
