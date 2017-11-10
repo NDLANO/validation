@@ -38,6 +38,9 @@
         "data-resource",
         "data-content-id",
         "data-link-text"
+      ],
+      "optional": [
+        [ "data-open-in" ]
       ]
     },
     "brightcove": {

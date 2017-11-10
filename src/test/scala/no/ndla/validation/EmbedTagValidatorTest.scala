@@ -123,7 +123,8 @@ class EmbedTagValidatorTest extends UnitSuite {
     val tag = generateTagWithAttrs(Map(
       Attributes.DataResource -> ResourceType.ContentLink.toString,
       Attributes.DataContentId -> "54",
-      Attributes.DataLinkText -> "interesting article"))
+      Attributes.DataLinkText -> "interesting article",
+    Attributes.DataOpenIn -> "new-context"))
     embedTagValidator.validate("content", tag).size should be (0)
   }
 
