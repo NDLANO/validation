@@ -23,6 +23,9 @@
     ],
     "aside": [
       "data-type"
+    ],
+    "p": [
+      "data-align"
     ]
   },
   "tags": [
