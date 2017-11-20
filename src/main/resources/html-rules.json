@@ -23,6 +23,9 @@
     ],
     "aside": [
       "data-type"
+    ],
+    "span": [
+      "lang"
     ]
   },
   "tags": [
@@ -51,7 +54,6 @@
     "br",
     "article",
     "strong",
-    "span",
     "embed",
     "a",
     "i",
