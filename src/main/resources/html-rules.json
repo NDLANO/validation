@@ -3,6 +3,9 @@
     "div": [
       "class"
     ],
+    "p": [
+      "data-align"
+    ],
     "td": [
       "valign",
       "align"
