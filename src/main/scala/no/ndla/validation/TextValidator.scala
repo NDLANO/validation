@@ -25,6 +25,12 @@ class TextValidator(allowHtml: Boolean) {
 
   private def validateOnlyBasicHtmlTags(fieldPath: String, text: String): Seq[ValidationMessage] = {
     val whiteList = new Whitelist().addTags(HtmlRules.allLegalTags.toSeq: _*)
+
+
+    /*HtmlTagRules.allEmbedTagAttributes
+        .filter(tag => HtmlTagRules.attributesForTagType(tag).toString.nonEmpty)
+          .foreach(tag => whiteList.addAttributes(tag.toString,tag.))*/
+
     HtmlRules.allLegalTags
       .filter(tag => HtmlRules.legalAttributesForTag(tag).nonEmpty)
       .foreach(tag => whiteList.addAttributes(tag, HtmlRules.legalAttributesForTag(tag).toSeq: _*))
@@ -36,8 +42,9 @@ class TextValidator(allowHtml: Boolean) {
           case true => None
           case false => Some(ValidationMessage(fieldPath, IllegalContentInBasicText))
         }
+        val htmlTagValidatorMessages = EmbedTagValidator.validate(fieldPath, text)
         val embedTagValidatorMessages = EmbedTagValidator.validate(fieldPath, text)
-        jsoupValidatorMessages.toList ++ embedTagValidatorMessages
+        jsoupValidatorMessages.toList ++ embedTagValidatorMessages ++ htmlTagValidatorMessages
       }
 
     }
