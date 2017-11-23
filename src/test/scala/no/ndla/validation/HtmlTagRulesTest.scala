@@ -9,34 +9,34 @@ package no.ndla.validation
 
 import no.ndla.mapping.UnitSuite
 
-class HtmlRulesTest extends UnitSuite {
+class HtmlTagRulesTest extends UnitSuite {
   test("embed tag should be an allowed tag and contain data attributes") {
-    HtmlRules.isTagValid("embed")
+    HtmlTagRules.isTagValid("embed")
     val dataAttrs = TagAttributes.values.map(_.toString).filter(x => x.startsWith("data-") && x != TagAttributes.DataType.toString)
-    val legalEmbedAttrs = HtmlRules.legalAttributesForTag("embed")
+    val legalEmbedAttrs = HtmlTagRules.legalAttributesForTag("embed")
     dataAttrs.foreach(x => legalEmbedAttrs should contain(x))
   }
 
   test("That isAttributeKeyValid returns false for illegal attributes") {
-    HtmlRules.isAttributeKeyValid("data-random-junk", "td") should equal(false)
+    HtmlTagRules.isAttributeKeyValid("data-random-junk", "td") should equal(false)
   }
 
   test("That isAttributeKeyValid returns true for legal attributes") {
-    HtmlRules.isAttributeKeyValid("align", "td") should equal(true)
+    HtmlTagRules.isAttributeKeyValid("align", "td") should equal(true)
   }
 
   test("That isTagValid returns false for illegal tags") {
-    HtmlRules.isTagValid("yodawg") should equal(false)
+    HtmlTagRules.isTagValid("yodawg") should equal(false)
   }
 
   test("That isTagValid returns true for legal attributes") {
-    HtmlRules.isTagValid("section") should equal(true)
+    HtmlTagRules.isTagValid("section") should equal(true)
   }
 
   test("span tag should be an allowed tag and contain one lang attribute") {
-    HtmlRules.isTagValid("span")
+    HtmlTagRules.isTagValid("span")
     val dataAttrs = TagAttributes.values.map(_.toString).filter(x => x.startsWith("lang") && x != TagAttributes.DataType.toString)
-    val legalEmbedAttrs = HtmlRules.legalAttributesForTag("span")
+    val legalEmbedAttrs = HtmlTagRules.legalAttributesForTag("span")
     dataAttrs.foreach(x => legalEmbedAttrs should contain(x))
   }
 

@@ -11,7 +11,7 @@ import no.ndla.mapping.UnitSuite
 import no.ndla.validation.EmbedTagRules.ResourceHtmlEmbedTag
 
 class EmbedTagValidatorTest extends UnitSuite {
-  val embedTagValidator = new EmbedTagValidator()
+  val embedTagValidator = new TagValidator()
 
   private def generateAttributes(attrs: Map[String, String]): String = {
     attrs.toList.sortBy(_._1.toString).map { case (key, value) => s"""$key="$value"""" }.mkString(" ")
@@ -25,8 +25,13 @@ class EmbedTagValidatorTest extends UnitSuite {
   private def findErrorByMessage(validationMessages: Seq[ValidationMessage], partialMessage: String) =
     validationMessages.find(_.message.contains(partialMessage))
 
-  test("validate should return an empty sequence if input is not an embed tag") {
+  test("validate should return an empty sequence if input is not an embed tag or an html tag with attributes") {
     embedTagValidator.validate("content", "<h1>hello</h1>") should equal (Seq())
+  }
+
+  test("validate should return a validation error if input is a html tag with that should not have attributes") {
+    val res = embedTagValidator.validate("content", "<h1 test='test'>hello</h1>")
+    findErrorByMessage(res, "An HTML tag 'h1' contains an illegal attribute(s) 'test'.").size should be (1)
   }
 
   test("validate should return validation error if embed tag uses illegal attributes") {
@@ -272,6 +277,20 @@ class EmbedTagValidatorTest extends UnitSuite {
     embedTagValidator.validate("content", tag).size should be (0)
   }
 
+  test("validate should return validation errors if lang attribute is missing") {
+    val res = embedTagValidator.validate("content", "<span>test</span>")
+    res.size should be (1)
+    findErrorByMessage(res, "span must contain the following attributes: lang.").size should be(1)
+  }
 
+  test("validate should not return validation errors if lang attribute is present") {
+    embedTagValidator.validate("content", "<span lang='nb'>test</span>").size should be (0)
+  }
 
+  test("validate should not return validation errors if lang attribute is present dd") {
+    val res = embedTagValidator.validate("content", "<span test='nb'>test</span>")
+    res.size should equal (2)
+    findErrorByMessage(res, "An HTML tag 'span' contains an illegal attribute(s) 'test'. Allowed attributes are lang").size should be(1)
+    findErrorByMessage(res, "span must contain the following attributes: lang. Optional attributes are: .").size should be(1)
+  }
 }

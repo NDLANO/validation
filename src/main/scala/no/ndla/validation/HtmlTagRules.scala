@@ -7,16 +7,33 @@
 
 package no.ndla.validation
 
-import scala.io.Source
-import EmbedTagRules.ResourceHtmlEmbedTag
-import org.json4s._
-import org.json4s.native.JsonMethods.parse
+import no.ndla.validation.EmbedTagRules._
+import org.json4s.native.JsonMethods._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Entities.EscapeMode
+import scala.io.Source
+import scala.language.postfixOps
 import scala.collection.JavaConverters._
 
-object HtmlRules {
+object HtmlTagRules {
+
+  case class HtmlThings(attrsForResource: Map[String, TagRules.TagAttributeRules])
+
+  private[validation] lazy val attributeRules: Map[String, TagRules.TagAttributeRules] = tagRulesToJson
+  lazy val allHtmlTagAttributes: Set[TagAttributes.Value] = attributeRules.flatMap { case (_ , attrRules)  => attrRules.all } toSet
+
+
+
+  private def tagRulesToJson = {
+    val attrs = TagRules.convertJsonStr(Source.fromResource("html-rules.json").mkString)
+      .get("attributes").map(_.asInstanceOf[Map[String, Map[String, Any]]])
+    attrs.get.map {
+      case (tagType, attrRules) => {
+        tagType -> TagRules.toTagAttributeRules(attrRules)
+      }
+    }
+  }
   def stringToJsoupDocument(htmlString: String): Element = {
     val document = Jsoup.parseBodyFragment(htmlString)
     document.outputSettings().escapeMode(EscapeMode.xhtml).prettyPrint(false)
@@ -52,7 +69,6 @@ object HtmlRules {
     }
 
     private def readAttributes: Map[String, Seq[String]] = {
-      val htmlJson: Map[String, Any] = htmlRulesJson
       val mathMlJson: Map[String, Any] = mathMLRulesJson
 
       val htmlAttrs = HtmlTagRules.attributeRules.map {
@@ -75,6 +91,8 @@ object HtmlRules {
   def allLegalTags: Set[String] = PermittedHTML.tags
 
   def attributesForTagType(tagType: String): Seq[String] = PermittedHTML.attributes.get(tagType).getOrElse(Seq.empty)
+
+  def tagAttributesForTagType(tagType: String): Option[TagRules.TagAttributeRules] = attributeRules.get(tagType)
 
   def legalAttributesForTag(tagName: String): Set[String] =  attributesForTagType(tagName).toSet
 

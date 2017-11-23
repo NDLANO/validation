@@ -7,6 +7,10 @@ object TagRules {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
   }
 
+  object TagAttributeRules {
+    def empty = TagAttributeRules(Set.empty, Seq.empty, None)
+  }
+
   def toTagAttributeRules(map: Map[String, Any]) = {
     val optionalAttrs: List[List[TagAttributes.Value]] = map.get("optional")
       .map(_.asInstanceOf[List[List[String]]].map(_.flatMap(TagAttributes.valueOf))).getOrElse(List.empty)

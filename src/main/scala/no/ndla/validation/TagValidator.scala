@@ -14,10 +14,38 @@ import org.jsoup.nodes.Element
 
 import scala.collection.JavaConverters._
 
-class EmbedTagValidator {
+class TagValidator {
   def validate(fieldName: String, content: String): Seq[ValidationMessage] = {
-    val document = HtmlRules.stringToJsoupDocument(content)
-    document.select(s"$ResourceHtmlEmbedTag").asScala.flatMap(validateEmbedTag(fieldName, _)).toList
+    val document = HtmlTagRules.stringToJsoupDocument(content)
+    document.select("*").asScala.flatMap((tag) => {
+      if (tag.tagName == ResourceHtmlEmbedTag) validateEmbedTag(fieldName, tag) else validateHtmlTag(fieldName, tag)
+    }).toList
+
+  }
+
+  def validateHtmlTag(fieldName: String, html: Element): Seq[ValidationMessage] = {
+    val tagName = html.tagName
+    if (!HtmlTagRules.isTagValid(tagName)) {
+      return Seq.empty
+    }
+
+    val allAttributesOnTag = html.attributes().asScala.map(attr => attr.getKey -> attr.getValue).toMap
+    val legalAttributesUsed = getLegalAttributesUsed(allAttributesOnTag, tagName)
+    val validationErrors = attributesAreLegal(fieldName, allAttributesOnTag, tagName)
+
+    val legalAttributesForTag = HtmlTagRules.tagAttributesForTagType(html.tagName).getOrElse(TagAttributeRules.empty)
+
+
+    val missingAttributes =  getMissingAttributes(legalAttributesForTag.required, legalAttributesUsed.keys.toSet)
+    val missingErrors = missingAttributes.map(missingAttributes => ValidationMessage(fieldName, s"$tagName must contain the following attributes: ${legalAttributesForTag.required.mkString(",")}. " +
+      s"Optional attributes are: ${legalAttributesForTag.optional.mkString(",")}. " +
+      s"Missing: ${missingAttributes.mkString(",")}")).toList
+    val partialErrorMessage = s"A $tagName HTML tag"
+
+    val optionalErrors =  verifyOptionals(fieldName, legalAttributesForTag, legalAttributesUsed.keys.toSet, partialErrorMessage)
+
+    validationErrors.toList ++ missingErrors.toList ++ optionalErrors.toList
+
   }
 
   private def validateEmbedTag(fieldName: String, embed: Element): Seq[ValidationMessage] = {
@@ -25,22 +53,24 @@ class EmbedTagValidator {
       return Seq()
 
     val allAttributesOnTag = embed.attributes().asScala.map(attr => attr.getKey -> attr.getValue).toMap
-    val legalAttributes = getLegalAttributesUsed(allAttributesOnTag)
+    val legalAttributes = getLegalAttributesUsed(allAttributesOnTag, ResourceHtmlEmbedTag)
 
-    val validationErrors = attributesAreLegal(fieldName, allAttributesOnTag) ++
+    val validationErrors = attributesAreLegal(fieldName, allAttributesOnTag, ResourceHtmlEmbedTag) ++
       attributesContainsNoHtml(fieldName, legalAttributes) ++
       verifyAttributeResource(fieldName, legalAttributes)
 
     validationErrors.toList
   }
 
-  private def attributesAreLegal(fieldName: String, attributes: Map[String, String]): Option[ValidationMessage] = {
-    val legalAttributeKeys = HtmlRules.legalAttributesForTag(ResourceHtmlEmbedTag)
+
+  private def attributesAreLegal(fieldName: String, attributes: Map[String, String], tagName: String): Option[ValidationMessage] = {
+    val legalAttributeKeys = HtmlTagRules.legalAttributesForTag(tagName)
+
     val illegalAttributesUsed: Set[String] = attributes.keySet diff legalAttributeKeys
 
     if (illegalAttributesUsed.nonEmpty) {
       Some(ValidationMessage(fieldName,
-        s"An HTML tag '$ResourceHtmlEmbedTag' contains an illegal attribute(s) '${illegalAttributesUsed.mkString(",")}'. Allowed attributes are ${legalAttributeKeys.mkString(",")}"))
+        s"An HTML tag '$tagName' contains an illegal attribute(s) '${illegalAttributesUsed.mkString(",")}'. Allowed attributes are ${legalAttributeKeys.mkString(",")}"))
     } else {
       None
     }
@@ -71,8 +101,10 @@ class EmbedTagValidator {
     val resourceType = ResourceType.valueOf(attributes(TagAttributes.DataResource)).get
     val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
 
+    val partialErrorMessage = s"An $ResourceHtmlEmbedTag HTML tag with ${TagAttributes.DataResource}=$resourceType"
+
     verifyEmbedTagBasedOnResourceType(fieldName, attributeRulesForTag, attributeKeys, resourceType) ++
-      verifyOptionals(fieldName, attributeRulesForTag, attributeKeys, resourceType) ++
+      verifyOptionals(fieldName, attributeRulesForTag, attributeKeys, partialErrorMessage) ++
       verifySourceUrl(fieldName, attributeRulesForTag, attributes, resourceType)
   }
 
@@ -90,12 +122,12 @@ class EmbedTagValidator {
   private def verifyOptionals(fieldName: String,
                               attrsRules: TagAttributeRules,
                               actualAttributes: Set[TagAttributes.Value],
-                              resourceType: ResourceType.Value): Seq[ValidationMessage] = {
+                              partialErrorMessage: String): Seq[ValidationMessage] = {
 
     val usedOptionalAttr = actualAttributes.intersect(attrsRules.optional.flatten.toSet)
     val a = usedOptionalAttr.flatMap(attr => {
       val attrRuleGroup = attrsRules.optional.find(_.contains(attr))
-      attrRuleGroup.map(attrRules => verifyUsedAttributesAgainstAttrRules(fieldName, attrRules, usedOptionalAttr, resourceType))
+      attrRuleGroup.map(attrRules => verifyUsedAttributesAgainstAttrRules(fieldName, attrRules, usedOptionalAttr, partialErrorMessage))
     }).toSeq
     a.flatten
   }
@@ -103,13 +135,13 @@ class EmbedTagValidator {
   private def verifyUsedAttributesAgainstAttrRules(fieldName: String,
                                                    attrRules: Set[TagAttributes.Value],
                                                    usedOptionalAttrs: Set[TagAttributes.Value],
-                                                   resourceType: ResourceType.Value): Seq[ValidationMessage] = {
+                                                   partialErrorMessage: String): Seq[ValidationMessage] = {
     val usedOptionalAttrsInCurrentGroup = usedOptionalAttrs.intersect(attrRules)
     usedOptionalAttrsInCurrentGroup.isEmpty match {
       case false if usedOptionalAttrsInCurrentGroup != attrRules =>
         val missingAttrs = attrRules.diff(usedOptionalAttrs).mkString(",")
         Seq(ValidationMessage(fieldName,
-          s"An $ResourceHtmlEmbedTag HTML tag with ${TagAttributes.DataResource}=$resourceType must contain all or none of the optional attributes (${attrRules.mkString(",")}). Missing $missingAttrs"
+          s"$partialErrorMessage must contain all or none of the optional attributes (${attrRules.mkString(",")}). Missing $missingAttrs"
         ))
       case _ => Seq.empty
     }
@@ -129,8 +161,8 @@ class EmbedTagValidator {
     missing.headOption.map(_ => missing)
   }
 
-  private def getLegalAttributesUsed(allAttributes: Map[String, String]): Map[TagAttributes.Value, String] = {
-    val legalAttributeKeys = HtmlRules.legalAttributesForTag(ResourceHtmlEmbedTag)
+  private def getLegalAttributesUsed(allAttributes: Map[String, String], tagName: String): Map[TagAttributes.Value, String] = {
+    val legalAttributeKeys = HtmlTagRules.legalAttributesForTag(tagName)
 
     allAttributes.filter { case (key, _) => legalAttributeKeys.contains(key) }
       .map { case (key, value) => TagAttributes.valueOf(key).get -> value }

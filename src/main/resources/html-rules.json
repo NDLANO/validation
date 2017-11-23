@@ -33,10 +33,18 @@
     "a": {
       "optional": [
         [
-          "href",
-          "title",
-          "name",
-          "target",
+          "href"
+        ],
+        [
+          "title"
+        ],
+        [
+          "name"
+        ],
+        [
+          "target"
+        ],
+        [
           "rel"
         ]
       ]
