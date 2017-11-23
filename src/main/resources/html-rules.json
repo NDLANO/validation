@@ -24,6 +24,9 @@
     "aside": [
       "data-type"
     ],
+    "p": [
+      "data-align"
+    ],
     "span": [
       "lang"
     ]
