@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sbt release -Dnexus.host=$NEXUS_HOST
+sbt -Dnexus.host=$NEXUS_HOST release
