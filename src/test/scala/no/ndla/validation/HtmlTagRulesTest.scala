@@ -39,5 +39,4 @@ class HtmlTagRulesTest extends UnitSuite {
     val legalEmbedAttrs = HtmlTagRules.legalAttributesForTag("span")
     dataAttrs.foreach(x => legalEmbedAttrs should contain(x))
   }
-
 }
