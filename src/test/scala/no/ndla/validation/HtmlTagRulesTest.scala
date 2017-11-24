@@ -40,4 +40,8 @@ class HtmlTagRulesTest extends UnitSuite {
     dataAttrs.foreach(x => legalEmbedAttrs should contain(x))
   }
 
+  test("math should be legal") {
+    HtmlTagRules.isTagValid("math") should be (true)
+  }
+
 }
