@@ -37,7 +37,7 @@ class TextValidator(allowHtml: Boolean) {
           case true => None
           case false => Some(ValidationMessage(fieldPath, IllegalContentInBasicText))
         }
-        TagValidator.validate(fieldPath, text)
+        TagValidator.validate(fieldPath, text) ++ jsoupValidatorMessages.toSeq
       }
 
     }

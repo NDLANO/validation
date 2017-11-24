@@ -62,10 +62,9 @@ object HtmlTagRules {
       val mathMlJson: Map[String, Any] = mathMLRulesJson
 
       val htmlTags = htmlJson.get("tags").map(_.asInstanceOf[Seq[String]].toSet)
-      val htmlAttributeTags = HtmlTagRules.attributeRules.keys
       val mathMlTags = mathMlJson.get("tags").map(_.asInstanceOf[Seq[String]].toSet)
 
-      htmlTags.getOrElse(Set.empty) ++ mathMlTags.getOrElse(Set.empty) ++ htmlAttributeTags
+      htmlTags.getOrElse(Set.empty) ++ mathMlTags.getOrElse(Set.empty) ++ attributes.keys
     }
 
     private def readAttributes: Map[String, Seq[String]] = {
