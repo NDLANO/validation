@@ -44,7 +44,7 @@ class TagValidator {
 
     val optionalErrors =  verifyOptionals(fieldName, legalAttributesForTag, legalAttributesUsed.keys.toSet, partialErrorMessage)
 
-    validationErrors.toList ++ missingErrors.toList ++ optionalErrors.toList
+    validationErrors.toList ++ missingErrors ++ optionalErrors
 
   }
 
