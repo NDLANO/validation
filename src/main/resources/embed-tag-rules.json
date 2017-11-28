@@ -66,7 +66,7 @@
           "data-upper-left-x",
           "data-upper-left-y",
           "data-lower-right-x",
-          "data-lower-right-y",
+          "data-lower-right-y"
         ], [
           "data-focal-x",
           "data-focal-y"
@@ -88,7 +88,7 @@
         "data-height"
       ],
       "validSrcDomains": [
-        "prezi.com",
+        "prezi.com"
       ]
     },
     "commoncraft": {

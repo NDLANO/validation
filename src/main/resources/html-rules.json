@@ -1,35 +1,75 @@
 {
   "attributes": {
-    "div": [
-      "class"
-    ],
-    "td": [
-      "valign",
-      "align"
-    ],
-    "th": [
-      "valign",
-      "align"
-    ],
-    "a": [
-      "href",
-      "title",
-      "name",
-      "target",
-      "rel"
-    ],
-    "ol": [
-      "data-type"
-    ],
-    "aside": [
-      "data-type"
-    ],
-    "p": [
-      "data-align"
-    ],
-    "span": [
-      "lang"
-    ]
+    "span": {
+      "required": ["lang"]
+    },
+    "div": {
+      "optional": [
+        [
+          "class"
+        ]
+      ]
+    },
+    "td": {
+      "optional": [
+        [
+          "valign"
+        ],
+        [
+          "align"
+        ]
+      ]
+    },
+    "th": {
+      "optional": [
+        [
+          "valign"
+        ],
+        [
+          "align"
+        ]
+      ]
+    },
+    "a": {
+      "optional": [
+        [
+          "href"
+        ],
+        [
+          "title"
+        ],
+        [
+          "name"
+        ],
+        [
+          "target"
+        ],
+        [
+          "rel"
+        ]
+      ]
+    },
+    "ol": {
+      "optional": [
+        [
+          "data-type"
+        ]
+      ]
+    },
+    "aside": {
+      "optional": [
+        [
+          "data-type"
+        ]
+      ]
+    },
+    "p": {
+      "optional": [
+        [
+          "data-align"
+        ]
+      ]
+    }
   },
   "tags": [
     "pre",
@@ -42,10 +82,8 @@
     "h4",
     "h5",
     "table",
-    "p",
     "tbody",
     "section",
-    "aside",
     "li",
     "details",
     "tr",
@@ -58,17 +96,14 @@
     "article",
     "strong",
     "embed",
-    "a",
     "i",
     "u",
     "button",
     "summary",
     "ul",
     "caption",
-    "div",
     "audio",
     "tfoot",
-    "embed",
     "td",
     "th"
   ]

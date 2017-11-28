@@ -22,7 +22,7 @@ class EmbedTagRulesTest extends UnitSuite {
     val resourceTypesFromConfigFile = EmbedTagRules.attributeRules.keys
 
     resourceTypesFromConfigFile.foreach(resType =>
-      EmbedTagRules.attributesForResourceType(resType).required should contain(Attributes.DataResource)
+      EmbedTagRules.attributesForResourceType(resType).required should contain(TagAttributes.DataResource)
     )
   }
 

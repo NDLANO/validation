@@ -11,10 +11,10 @@ import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
 
 class TextValidator(allowHtml: Boolean) {
-  private def IllegalContentInBasicText = s"The content contains illegal tags and/or attributes. Allowed HTML tags are: ${HtmlRules.allLegalTags.mkString(",")}"
+  private def IllegalContentInBasicText = s"The content contains illegal tags and/or attributes. Allowed HTML tags are: ${HtmlTagRules.allLegalTags.mkString(",")}"
   private val IllegalContentInPlainText = "The content contains illegal html-characters. No HTML is allowed"
   private val FieldEmpty = "Required field is empty"
-  private val EmbedTagValidator = new EmbedTagValidator
+  private val TagValidator = new TagValidator
 
   def validate(fieldPath: String, text: String): Seq[ValidationMessage] = {
     allowHtml match {
@@ -24,10 +24,11 @@ class TextValidator(allowHtml: Boolean) {
   }
 
   private def validateOnlyBasicHtmlTags(fieldPath: String, text: String): Seq[ValidationMessage] = {
-    val whiteList = new Whitelist().addTags(HtmlRules.allLegalTags.toSeq: _*)
-    HtmlRules.allLegalTags
-      .filter(tag => HtmlRules.legalAttributesForTag(tag).nonEmpty)
-      .foreach(tag => whiteList.addAttributes(tag, HtmlRules.legalAttributesForTag(tag).toSeq: _*))
+    val whiteList = new Whitelist().addTags(HtmlTagRules.allLegalTags.toSeq: _*)
+
+    HtmlTagRules.allLegalTags
+      .filter(tag => HtmlTagRules.legalAttributesForTag(tag).nonEmpty)
+      .foreach(tag => whiteList.addAttributes(tag, HtmlTagRules.legalAttributesForTag(tag).toSeq: _*))
 
     text.isEmpty match {
       case true => ValidationMessage(fieldPath, FieldEmpty) :: Nil
@@ -36,8 +37,7 @@ class TextValidator(allowHtml: Boolean) {
           case true => None
           case false => Some(ValidationMessage(fieldPath, IllegalContentInBasicText))
         }
-        val embedTagValidatorMessages = EmbedTagValidator.validate(fieldPath, text)
-        jsoupValidatorMessages.toList ++ embedTagValidatorMessages
+        TagValidator.validate(fieldPath, text) ++ jsoupValidatorMessages.toSeq
       }
 
     }
