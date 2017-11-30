@@ -17,6 +17,12 @@
         ],
         [
           "align"
+        ],
+        [
+          "colspan"
+        ],
+        [
+          "rowspan"
         ]
       ]
     },
@@ -27,6 +33,12 @@
         ],
         [
           "align"
+        ],
+        [
+          "colspan"
+        ],
+        [
+          "rowspan"
         ]
       ]
     },

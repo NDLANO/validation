@@ -75,6 +75,8 @@ object TagAttributes extends Enumeration {
   val Rel = Value("rel")
   val Class = Value("class")
   val Lang = Value("lang")
+  val Colspan = Value("colspan")
+  val Rowspan = Value("rowspan")
 
   def all: Set[String] = TagAttributes.values.map(_.toString)
 
