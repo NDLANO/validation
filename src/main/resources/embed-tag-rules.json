@@ -144,7 +144,8 @@
         "data-height"
       ],
       "validSrcDomains": [
-        "tv2skole.no"
+        "tv2skole.no",
+        ".*.tv2skole.no"
       ]
     },
     "footnote": {
