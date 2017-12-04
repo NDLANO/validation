@@ -52,6 +52,7 @@ object ResourceType extends Enumeration {
   val NdlaFilmIundervisning = Value("ndla-filmiundervisning")
   val Kahoot = Value("kahoot")
   val KhanAcademy = Value("khan-academy")
+  val Tv2Skole = Value("tv2-skole")
   val FootNote = Value("footnote")
   val RelatedContent = Value("related-content")
 
