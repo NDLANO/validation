@@ -136,6 +136,17 @@
         "khanacademy.org"
       ]
     },
+    "tv2-skole": {
+      "required": [
+        "data-resource",
+        "data-url",
+        "data-width",
+        "data-height"
+      ],
+      "validSrcDomains": [
+        "tv2skole.no"
+      ]
+    },
     "footnote": {
       "required": [
         "data-resource",
