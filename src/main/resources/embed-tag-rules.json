@@ -159,6 +159,17 @@
         "www.vg.no"
       ]
     },
+    "scribd": {
+      "required": [
+        "data-resource",
+        "data-url",
+        "data-width",
+        "data-height"
+      ],
+      "validSrcDomains": [
+        "www.scribd.com"
+      ]
+    },
     "footnote": {
       "required": [
         "data-resource",
