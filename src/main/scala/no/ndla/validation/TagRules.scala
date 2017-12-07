@@ -75,8 +75,10 @@ object TagAttributes extends Enumeration {
   val Rel = Value("rel")
   val Class = Value("class")
   val Lang = Value("lang")
-  val Colspan = Value("colspan")
-  val Rowspan = Value("rowspan")
+
+  private[validation] def getOrCreate(s: String): TagAttributes.Value = {
+    valueOf(s).getOrElse(Value(s))
+  }
 
   def all: Set[String] = TagAttributes.values.map(_.toString)
 

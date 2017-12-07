@@ -44,4 +44,11 @@ class HtmlTagRulesTest extends UnitSuite {
     HtmlTagRules.isTagValid("math") should be (true)
   }
 
+  test("Rules for all attributes should be defined?") { //TODO: REMOVE THIS if TagAttributes.create fix is okay
+    val resourceTypesFromConfigFile = HtmlTagRules.allHtmlTagAttributes
+    val resourceTypesFromEnumDeclaration = TagAttributes.values
+
+    resourceTypesFromEnumDeclaration should equal (resourceTypesFromConfigFile)
+  }
+
 }
