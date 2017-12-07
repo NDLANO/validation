@@ -136,6 +136,40 @@
         "khanacademy.org"
       ]
     },
+    "tv2-skole": {
+      "required": [
+        "data-resource",
+        "data-url",
+        "data-width",
+        "data-height"
+      ],
+      "validSrcDomains": [
+        "tv2skole.no",
+        ".*.tv2skole.no"
+      ]
+    },
+    "vgno": {
+      "required": [
+        "data-resource",
+        "data-url",
+        "data-width",
+        "data-height"
+      ],
+      "validSrcDomains": [
+        "www.vg.no"
+      ]
+    },
+    "scribd": {
+      "required": [
+        "data-resource",
+        "data-url",
+        "data-width",
+        "data-height"
+      ],
+      "validSrcDomains": [
+        "www.scribd.com"
+      ]
+    },
     "footnote": {
       "required": [
         "data-resource",
