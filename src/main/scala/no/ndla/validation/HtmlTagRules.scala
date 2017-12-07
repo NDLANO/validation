@@ -89,7 +89,7 @@ object HtmlTagRules {
 
   def allLegalTags: Set[String] = PermittedHTML.tags
 
-  def attributesForTagType(tagType: String): Seq[String] = PermittedHTML.attributes.get(tagType).getOrElse(Seq.empty)
+  def attributesForTagType(tagType: String): Seq[String] = PermittedHTML.attributes.getOrElse(tagType, Seq.empty)
 
   def tagAttributesForTagType(tagType: String): Option[TagRules.TagAttributeRules] = attributeRules.get(tagType)
 
