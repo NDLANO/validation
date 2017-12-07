@@ -165,7 +165,10 @@ class TagValidator {
     val legalAttributeKeys = HtmlTagRules.legalAttributesForTag(tagName)
 
     allAttributes.filter { case (key, _) => legalAttributeKeys.contains(key) }
-      .map { case (key, value) => TagAttributes.valueOf(key).get -> value }
+      .map {
+        case (key, value) =>
+          TagAttributes.valueOf(key).getOrElse(TagAttributes.getOrCreate(key)) -> value
+      }
   }
 
 }

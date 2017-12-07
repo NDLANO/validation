@@ -13,10 +13,12 @@ object TagRules {
 
   def toTagAttributeRules(map: Map[String, Any]) = {
     val optionalAttrs: List[List[TagAttributes.Value]] = map.get("optional")
-      .map(_.asInstanceOf[List[List[String]]].map(_.flatMap(TagAttributes.valueOf))).getOrElse(List.empty)
+      .map(_.asInstanceOf[List[List[String]]].map(_.map(TagAttributes.getOrCreate))).getOrElse(List.empty)
+
     val validSrcDomains: Option[Seq[String]] = map.get("validSrcDomains").map(_.asInstanceOf[Seq[String]])
+
     val requiredAttrs: List[TagAttributes.Value] = map.get("required")
-      .map(_.asInstanceOf[List[String]].flatMap(TagAttributes.valueOf))
+      .map(_.asInstanceOf[List[String]].map(TagAttributes.getOrCreate))
       .getOrElse(List.empty)
 
     TagAttributeRules(
@@ -75,8 +77,10 @@ object TagAttributes extends Enumeration {
   val Rel = Value("rel")
   val Class = Value("class")
   val Lang = Value("lang")
-  val Colspan = Value("colspan")
-  val Rowspan = Value("rowspan")
+
+  private[validation] def getOrCreate(s: String): TagAttributes.Value = {
+    valueOf(s).getOrElse(Value(s))
+  }
 
   def all: Set[String] = TagAttributes.values.map(_.toString)
 
