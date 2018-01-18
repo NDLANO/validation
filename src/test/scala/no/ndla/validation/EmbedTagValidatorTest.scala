@@ -244,7 +244,7 @@ class EmbedTagValidatorTest extends UnitSuite {
 
   test("validate should succeed if source url is from a legal domain") {
     val tag = generateTagWithAttrs(Map(
-      TagAttributes.DataResource -> ResourceType.Prezi.toString,
+      TagAttributes.DataResource -> ResourceType.IframeContent.toString,
       TagAttributes.DataUrl -> "https://prezi.com",
       TagAttributes.DataWidth -> "1",
       TagAttributes.DataHeight -> "1"
@@ -255,7 +255,7 @@ class EmbedTagValidatorTest extends UnitSuite {
 
   test("validate should fail if source url is from an illlegal domain") {
     val tag = generateTagWithAttrs(Map(
-      TagAttributes.DataResource -> ResourceType.Prezi.toString,
+      TagAttributes.DataResource -> ResourceType.IframeContent.toString,
       TagAttributes.DataUrl -> "https://evilprezi.com",
       TagAttributes.DataWidth -> "1",
       TagAttributes.DataHeight -> "1"
@@ -268,7 +268,7 @@ class EmbedTagValidatorTest extends UnitSuite {
 
   test("validate should succeed if source url is from a legal wildcard domain") {
     val tag = generateTagWithAttrs(Map(
-      TagAttributes.DataResource -> ResourceType.KhanAcademy.toString,
+      TagAttributes.DataResource -> ResourceType.IframeContent.toString,
       TagAttributes.DataUrl -> "https://thisisatest.khanacademy.org",
       TagAttributes.DataWidth -> "1",
       TagAttributes.DataHeight -> "1"
