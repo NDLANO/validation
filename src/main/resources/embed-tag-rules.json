@@ -80,7 +80,7 @@
         "data-link-text"
       ]
     },
-    "prezi": {
+    "iframe": {
       "required": [
         "data-resource",
         "data-url",
@@ -88,86 +88,16 @@
         "data-height"
       ],
       "validSrcDomains": [
-        "prezi.com"
-      ]
-    },
-    "commoncraft": {
-      "required": [
-        "data-resource",
-        "data-url",
-        "data-width",
-        "data-height"
-      ],
-      "validSrcDomains": [
-        "www.commoncraft.com"
-      ]
-    },
-    "ndla-filmiundervisning": {
-      "required": [
-        "data-resource",
-        "data-url",
-        "data-width",
-        "data-height"
-      ],
-      "validSrcDomains": [
-        "ndla.filmiundervisning.no"
-      ]
-    },
-    "kahoot": {
-      "required": [
-        "data-resource",
-        "data-url",
-        "data-width",
-        "data-height"
-      ],
-      "validSrcDomains": [
-        "embed.kahoot.it"
-      ]
-    },
-    "khan-academy": {
-      "required": [
-        "data-resource",
-        "data-url",
-        "data-width",
-        "data-height"
-      ],
-      "validSrcDomains": [
+        "prezi.com",
+        "www.commoncraft.com",
+        "ndla.filmiundervisning.no",
+        "embed.kahoot.it",
         ".*.khanacademy.org",
-        "khanacademy.org"
-      ]
-    },
-    "tv2-skole": {
-      "required": [
-        "data-resource",
-        "data-url",
-        "data-width",
-        "data-height"
-      ],
-      "validSrcDomains": [
+        "khanacademy.org",
         "tv2skole.no",
-        ".*.tv2skole.no"
-      ]
-    },
-    "vgno": {
-      "required": [
-        "data-resource",
-        "data-url",
-        "data-width",
-        "data-height"
-      ],
-      "validSrcDomains": [
+        ".*.tv2skole.no",
+        "www.scribd.com",
         "www.vg.no"
-      ]
-    },
-    "scribd": {
-      "required": [
-        "data-resource",
-        "data-url",
-        "data-width",
-        "data-height"
-      ],
-      "validSrcDomains": [
-        "www.scribd.com"
       ]
     },
     "footnote": {
