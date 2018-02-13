@@ -23,8 +23,9 @@
     "audio": {
       "required": [
         "data-resource",
-        "data-resource_id"
-      ]
+        "data-resource_id",
+        "data-caption"
+      ],
     },
     "nrk": {
       "required": [
