@@ -23,9 +23,11 @@
     "audio": {
       "required": [
         "data-resource",
-        "data-resource_id",
-        "data-caption"
+        "data-resource_id"
       ],
+      "optional": [
+        [ "data-caption" ]
+      ]
     },
     "nrk": {
       "required": [
