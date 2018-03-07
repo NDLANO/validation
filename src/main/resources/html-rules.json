@@ -85,7 +85,7 @@
     "ul": {
       "optional": [
         [
-          "class"
+          "data-type"
         ]
       ]
     }
