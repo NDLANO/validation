@@ -81,6 +81,13 @@
           "data-align"
         ]
       ]
+    },
+    "ul": {
+      "optional": [
+        [
+          "data-type"
+        ]
+      ]
     }
   },
   "tags": [
@@ -112,7 +119,6 @@
     "u",
     "button",
     "summary",
-    "ul",
     "caption",
     "audio",
     "tfoot",
