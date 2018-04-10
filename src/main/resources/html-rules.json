@@ -1,7 +1,14 @@
 {
   "attributes": {
     "span": {
-      "required": ["lang"]
+      "optional": [
+        [
+          "lang"
+        ],
+        [
+          "data-size"
+        ]
+      ]
     },
     "div": {
       "optional": [
