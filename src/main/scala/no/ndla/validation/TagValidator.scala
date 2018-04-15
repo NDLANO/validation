@@ -44,8 +44,7 @@ class TagValidator {
 
     val optionalErrors =  verifyOptionals(fieldName, legalAttributesForTag, legalAttributesUsed.keys.toSet, partialErrorMessage)
 
-    validationErrors.toList ++ missingErrors ++ optionalErrors
-
+    validationErrors ++ missingErrors ++ optionalErrors
   }
 
   private def validateEmbedTag(fieldName: String, embed: Element): Seq[ValidationMessage] = {
@@ -63,17 +62,25 @@ class TagValidator {
   }
 
 
-  private def attributesAreLegal(fieldName: String, attributes: Map[String, String], tagName: String): Option[ValidationMessage] = {
+  private def attributesAreLegal(fieldName: String, attributes: Map[String, String], tagName: String): List[ValidationMessage] = {
     val legalAttributeKeys = HtmlTagRules.legalAttributesForTag(tagName)
-
     val illegalAttributesUsed: Set[String] = attributes.keySet diff legalAttributeKeys
+    val legalAttributesUsed: Set[String] = attributes.keySet diff illegalAttributesUsed
 
-    if (illegalAttributesUsed.nonEmpty) {
-      Some(ValidationMessage(fieldName,
+    val illegalTagsError = if (illegalAttributesUsed.nonEmpty) {
+      List(ValidationMessage(fieldName,
         s"An HTML tag '$tagName' contains an illegal attribute(s) '${illegalAttributesUsed.mkString(",")}'. Allowed attributes are ${legalAttributeKeys.mkString(",")}"))
     } else {
-      None
+      List.empty
     }
+
+    val mustContainAttributesError = if (HtmlTagRules.tagMustContainAtLeastOneAttribute(tagName) && legalAttributesUsed.isEmpty) {
+      List(ValidationMessage(fieldName, s"An HTML tag '$tagName' must contain at least one attribute"))
+    } else {
+      List.empty
+    }
+
+    illegalTagsError ++ mustContainAttributesError
   }
 
   private def attributesContainsNoHtml(fieldName: String, attributes: Map[TagAttributes.Value, String]): Option[ValidationMessage] = {

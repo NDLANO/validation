@@ -29,9 +29,8 @@ object HtmlTagRules {
     val attrs = TagRules.convertJsonStr(Source.fromResource("html-rules.json").mkString)
       .get("attributes").map(_.asInstanceOf[Map[String, Map[String, Any]]])
     attrs.get.map {
-      case (tagType, attrRules) => {
+      case (tagType, attrRules) =>
         tagType -> TagRules.toTagAttributeRules(attrRules)
-      }
     }
   }
   def stringToJsoupDocument(htmlString: String): Element = {
@@ -93,7 +92,10 @@ object HtmlTagRules {
 
   def tagAttributesForTagType(tagType: String): Option[TagRules.TagAttributeRules] = attributeRules.get(tagType)
 
-  def legalAttributesForTag(tagName: String): Set[String] =  attributesForTagType(tagName).toSet
+  def legalAttributesForTag(tagName: String): Set[String] = attributesForTagType(tagName).toSet
+
+  def tagMustContainAtLeastOneAttribute(tagName: String): Boolean =
+    tagAttributesForTagType(tagName).exists(_.mustContainAtLeastOneAttribute)
 
   def removeIllegalAttributes(el: Element, legalAttributes: Set[String]): Seq[String] = {
     el.attributes().asScala.toList.

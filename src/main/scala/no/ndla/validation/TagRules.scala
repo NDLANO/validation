@@ -3,12 +3,15 @@ package no.ndla.validation
 import org.json4s.native.JsonMethods._
 
 object TagRules {
-  case class TagAttributeRules(required: Set[TagAttributes.Value], optional: Seq[Set[TagAttributes.Value]], validSrcDomains: Option[Seq[String]]) {
+  case class TagAttributeRules(required: Set[TagAttributes.Value],
+                               optional: Seq[Set[TagAttributes.Value]],
+                               validSrcDomains: Option[Seq[String]],
+                               mustContainAtLeastOneAttribute: Boolean) {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
   }
 
   object TagAttributeRules {
-    def empty = TagAttributeRules(Set.empty, Seq.empty, None)
+    def empty = TagAttributeRules(Set.empty, Seq.empty, None, false)
   }
 
   def toTagAttributeRules(map: Map[String, Any]) = {
@@ -21,10 +24,15 @@ object TagRules {
       .map(_.asInstanceOf[List[String]].map(TagAttributes.getOrCreate))
       .getOrElse(List.empty)
 
+    val mustContainAtLeastOneAttribute = map.get("mustContainAtLeastOneAttribute")
+      .map(_.asInstanceOf[Boolean])
+      .getOrElse(false) || requiredAttrs.nonEmpty
+
     TagAttributeRules(
       requiredAttrs.toSet,
       optionalAttrs.map(_.toSet),
-      validSrcDomains
+      validSrcDomains,
+      mustContainAtLeastOneAttribute
     )
   }
 

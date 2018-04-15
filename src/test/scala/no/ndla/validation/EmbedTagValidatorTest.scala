@@ -284,12 +284,17 @@ class EmbedTagValidatorTest extends UnitSuite {
 
   test("validate should not return validation errors if lang attribute is present dd") {
     val res = embedTagValidator.validate("content", "<span test='nb'>test</span>")
-    res.size should equal (1)
+    res.size should equal (2)
     findErrorByMessage(res, "An HTML tag 'span' contains an illegal attribute(s) 'test'. Allowed attributes are lang").size should be(1)
   }
 
   test("validate should return not return validation errors if colspan is present on th or td") {
     val res = embedTagValidator.validate("content", "<table><thead><tr><th colspan=\"2\">Hei</th></tr></thead><tbody><tr><td>Hei</td><td>Hå</td></tr></tbody></table>")
     res.size should equal(0)
+  }
+
+  test("validate should return error if span does not have any attributes") {
+    val res = embedTagValidator.validate("content", "<span>lorem ipsum</span>")
+    res.size should equal(1)
   }
 }
