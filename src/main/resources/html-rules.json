@@ -1,7 +1,15 @@
 {
   "attributes": {
     "span": {
-      "required": ["lang"]
+      "mustContainAtLeastOneAttribute": true,
+      "optional": [
+        [
+          "lang"
+        ],
+        [
+          "data-size"
+        ]
+      ]
     },
     "div": {
       "optional": [
