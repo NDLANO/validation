@@ -81,7 +81,8 @@ class EmbedTagValidatorTest extends UnitSuite {
     val tag = generateTagWithAttrs(Map(
       TagAttributes.DataResource -> ResourceType.Audio.toString,
       TagAttributes.DataResource_Id -> "1234",
-      TagAttributes.DataCaption -> ""
+      TagAttributes.DataCaption -> "",
+      TagAttributes.DataType -> "standard"
     ))
     embedTagValidator.validate("content", tag).size should be (0)
   }
