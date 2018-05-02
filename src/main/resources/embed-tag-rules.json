@@ -24,6 +24,7 @@
       "required": [
         "data-resource",
         "data-resource_id"
+        "data-type"
       ],
       "optional": [
         [ "data-caption" ]
