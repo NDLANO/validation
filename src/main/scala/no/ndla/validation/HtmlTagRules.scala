@@ -21,18 +21,21 @@ object HtmlTagRules {
   case class HtmlThings(attrsForResource: Map[String, TagRules.TagAttributeRules])
 
   private[validation] lazy val attributeRules: Map[String, TagRules.TagAttributeRules] = tagRulesToJson
-  lazy val allHtmlTagAttributes: Set[TagAttributes.Value] = attributeRules.flatMap { case (_ , attrRules)  => attrRules.all } toSet
-
-
+  lazy val allHtmlTagAttributes: Set[TagAttributes.Value] = attributeRules.flatMap {
+    case (_, attrRules) => attrRules.all
+  } toSet
 
   private def tagRulesToJson = {
-    val attrs = TagRules.convertJsonStr(Source.fromResource("html-rules.json").mkString)
-      .get("attributes").map(_.asInstanceOf[Map[String, Map[String, Any]]])
+    val attrs = TagRules
+      .convertJsonStr(Source.fromResource("html-rules.json").mkString)
+      .get("attributes")
+      .map(_.asInstanceOf[Map[String, Map[String, Any]]])
     attrs.get.map {
       case (tagType, attrRules) =>
         tagType -> TagRules.toTagAttributeRules(attrRules)
     }
   }
+
   def stringToJsoupDocument(htmlString: String): Element = {
     val document = Jsoup.parseBodyFragment(htmlString)
     document.outputSettings().escapeMode(EscapeMode.xhtml).prettyPrint(false)
@@ -70,14 +73,13 @@ object HtmlTagRules {
       val mathMlJson: Map[String, Any] = mathMLRulesJson
 
       val htmlAttrs = HtmlTagRules.attributeRules.map {
-        case(tagType, attrs) => tagType -> attrs.all.map(_.toString).toSeq
+        case (tagType, attrs) => tagType -> attrs.all.map(_.toString).toSeq
       }
       val mathMlAttrs = mathMlJson.get("attributes").map(_.asInstanceOf[Map[String, Seq[String]]])
       val embedAttrs = EmbedTagRules.allEmbedTagAttributes.map(_.toString).toSeq
       htmlAttrs ++ mathMlAttrs.getOrElse(Map.empty) ++ Map(ResourceHtmlEmbedTag -> embedAttrs)
     }
   }
-
 
   def isAttributeKeyValid(attributeKey: String, tagName: String): Boolean = {
     val legalAttrs = legalAttributesForTag(tagName)
@@ -98,8 +100,10 @@ object HtmlTagRules {
     tagAttributesForTagType(tagName).exists(_.mustContainAtLeastOneAttribute)
 
   def removeIllegalAttributes(el: Element, legalAttributes: Set[String]): Seq[String] = {
-    el.attributes().asScala.toList.
-      filter(attr => !legalAttributes.contains(attr.getKey))
+    el.attributes()
+      .asScala
+      .toList
+      .filter(attr => !legalAttributes.contains(attr.getKey))
       .map(illegalAttribute => {
         val keyName = illegalAttribute.getKey
         el.removeAttr(keyName)

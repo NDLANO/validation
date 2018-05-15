@@ -17,19 +17,26 @@ object EmbedTagRules {
 
   case class EmbedThings(attrsForResource: Map[ResourceType.Value, TagRules.TagAttributeRules])
 
-
   private[validation] lazy val attributeRules: Map[ResourceType.Value, TagRules.TagAttributeRules] = embedRulesToJson
 
-  lazy val allEmbedTagAttributes: Set[TagAttributes.Value] = attributeRules.flatMap { case (_ , attrRules)  => attrRules.all } toSet
+  lazy val allEmbedTagAttributes: Set[TagAttributes.Value] = attributeRules.flatMap {
+    case (_, attrRules) => attrRules.all
+  } toSet
 
-  def attributesForResourceType(resourceType: ResourceType.Value): TagRules.TagAttributeRules = attributeRules(resourceType)
+  def attributesForResourceType(resourceType: ResourceType.Value): TagRules.TagAttributeRules =
+    attributeRules(resourceType)
 
   private def embedRulesToJson = {
-    val attrs = TagRules.convertJsonStr(Source.fromResource("embed-tag-rules.json").mkString)
-      .get("attrsForResource").map(_.asInstanceOf[Map[String, Map[String, Any]]])
+    val attrs = TagRules
+      .convertJsonStr(Source.fromResource("embed-tag-rules.json").mkString)
+      .get("attrsForResource")
+      .map(_.asInstanceOf[Map[String, Map[String, Any]]])
 
     def strToResourceType(str: String): ResourceType.Value =
-      ResourceType.valueOf(str).getOrElse(throw new ConfigurationException(s"Missing declaration of resource type '$str' in ResourceType enum"))
+      ResourceType
+        .valueOf(str)
+        .getOrElse(
+          throw new ConfigurationException(s"Missing declaration of resource type '$str' in ResourceType enum"))
 
     attrs.get.map {
       case (resourceType, attrRules) => strToResourceType(resourceType) -> TagRules.toTagAttributeRules(attrRules)

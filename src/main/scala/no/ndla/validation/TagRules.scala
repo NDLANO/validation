@@ -15,16 +15,20 @@ object TagRules {
   }
 
   def toTagAttributeRules(map: Map[String, Any]) = {
-    val optionalAttrs: List[List[TagAttributes.Value]] = map.get("optional")
-      .map(_.asInstanceOf[List[List[String]]].map(_.map(TagAttributes.getOrCreate))).getOrElse(List.empty)
+    val optionalAttrs: List[List[TagAttributes.Value]] = map
+      .get("optional")
+      .map(_.asInstanceOf[List[List[String]]].map(_.map(TagAttributes.getOrCreate)))
+      .getOrElse(List.empty)
 
     val validSrcDomains: Option[Seq[String]] = map.get("validSrcDomains").map(_.asInstanceOf[Seq[String]])
 
-    val requiredAttrs: List[TagAttributes.Value] = map.get("required")
+    val requiredAttrs: List[TagAttributes.Value] = map
+      .get("required")
       .map(_.asInstanceOf[List[String]].map(TagAttributes.getOrCreate))
       .getOrElse(List.empty)
 
-    val mustContainAtLeastOneAttribute = map.get("mustContainAtLeastOneAttribute")
+    val mustContainAtLeastOneAttribute = map
+      .get("mustContainAtLeastOneAttribute")
       .map(_.asInstanceOf[Boolean])
       .getOrElse(false) || requiredAttrs.nonEmpty
 
@@ -68,7 +72,7 @@ object TagAttributes extends Enumeration {
   val DataAuthors = Value("data-authors")
   val DataArticleIds = Value("data-article-ids")
 
-  val DataUpperLeftY =  Value("data-upper-left-y")
+  val DataUpperLeftY = Value("data-upper-left-y")
   val DataUpperLeftX = Value("data-upper-left-x")
   val DataLowerRightY = Value("data-lower-right-y")
   val DataLowerRightX = Value("data-lower-right-x")
