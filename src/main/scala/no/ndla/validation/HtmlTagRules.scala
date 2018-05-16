@@ -27,7 +27,7 @@ object HtmlTagRules {
 
   private def tagRulesToJson = {
     val attrs = TagRules
-      .convertJsonStr(Source.fromResource("html-rules.json").mkString)
+      .convertJsonStrToAttributeRules(Source.fromResource("html-rules.json").mkString)
 
     attrs.map {
       case (tagType, attrRules) =>

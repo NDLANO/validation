@@ -68,9 +68,16 @@ class TagValidator {
 
     val validationErrors = attributesAreLegal(fieldName, allAttributesOnTag, ResourceHtmlEmbedTag) ++
       attributesContainsNoHtml(fieldName, legalAttributes) ++
-      verifyAttributeResource(fieldName, legalAttributes)
+      verifyAttributeResource(fieldName, legalAttributes) ++
+      verifyParent(embed)
 
     validationErrors
+  }
+
+  private def verifyParent(element: Element): Seq[ValidationMessage] = {
+
+    val requiredParent
+
   }
 
   private def attributesAreLegal(fieldName: String,

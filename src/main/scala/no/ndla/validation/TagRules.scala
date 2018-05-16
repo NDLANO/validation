@@ -8,15 +8,20 @@ object TagRules {
   case class TagAttributeRules(required: Set[TagAttributes.Value],
                                optional: Seq[Set[TagAttributes.Value]],
                                validSrcDomains: Option[Seq[String]],
-                               mustContainAtLeastOneAttribute: Boolean = false) {
+                               mustBeDirectChildOf: Option[ParentTag],
+                               mustContainAtLeastOneAttribute: Boolean = false
+                              ) {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
   }
 
+  case class ParentTag(name: String, requiredAttr: List[(String, String)]) // For some reason mustBeDirectChildOf becomes None when name of requiredAttr matches that in json
+
+
   object TagAttributeRules {
-    def empty = TagAttributeRules(Set.empty, Seq.empty, None, false)
+    def empty = TagAttributeRules(Set.empty, Seq.empty, None, None)
   }
 
-  def convertJsonStr(jsonStr: String): Map[String, TagAttributeRules] = {
+  def convertJsonStrToAttributeRules(jsonStr: String): Map[String, TagAttributeRules] = {
     implicit val formats = org.json4s.DefaultFormats + new EnumNameSerializer(TagAttributes)
 
     (parse(jsonStr) \ "attributes").extract[JObject].obj.map{

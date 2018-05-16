@@ -127,9 +127,9 @@
           "data-title"
         ]
       ],
-      "must-be-direct-child-of": {
-        "tag-name": "div",
-        "required": [
+      "mustBeDirectChildOf": {
+        "name": "div",
+        "requiredAttr": [
           {
             "data-type": "related-content"
           }

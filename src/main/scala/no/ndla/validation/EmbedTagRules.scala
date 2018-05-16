@@ -25,7 +25,7 @@ object EmbedTagRules {
     attributeRules(resourceType)
 
   private def embedRulesToJson = {
-    val attrs = TagRules.convertJsonStr(Source.fromResource("embed-tag-rules.json").mkString)
+    val attrs = TagRules.convertJsonStrToAttributeRules(Source.fromResource("embed-tag-rules.json").mkString)
 
     def strToResourceType(str: String): ResourceType.Value =
       ResourceType
