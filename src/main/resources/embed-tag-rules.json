@@ -1,5 +1,5 @@
 {
-  "attrsForResource": {
+  "attributes": {
     "h5p": {
       "required": [
         "data-resource",
@@ -23,7 +23,7 @@
     "audio": {
       "required": [
         "data-resource",
-        "data-resource_id"
+        "data-resource_id",
         "data-type"
       ],
       "optional": [
@@ -117,9 +117,24 @@
     },
     "related-content": {
       "required": [
-        "data-resource",
-        "data-article-ids"
-      ]
+        "data-resource"
+      ],
+      "optional": [
+        [
+          "data-article-id"
+        ], [
+          "data-url",
+          "data-title"
+        ]
+      ],
+      "must-be-direct-child-of": {
+        "tag-name": "div",
+        "required": [
+          {
+            "data-type": "related-content"
+          }
+        ]
+      }
     }
 
   }

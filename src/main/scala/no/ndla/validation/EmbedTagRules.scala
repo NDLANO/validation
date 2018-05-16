@@ -7,8 +7,6 @@
 
 package no.ndla.validation
 
-import org.json4s.native.JsonMethods.parse
-import org.json4s._
 import scala.language.postfixOps
 import scala.io.Source
 
@@ -27,10 +25,7 @@ object EmbedTagRules {
     attributeRules(resourceType)
 
   private def embedRulesToJson = {
-    val attrs = TagRules
-      .convertJsonStr(Source.fromResource("embed-tag-rules.json").mkString)
-      .get("attrsForResource")
-      .map(_.asInstanceOf[Map[String, Map[String, Any]]])
+    val attrs = TagRules.convertJsonStr(Source.fromResource("embed-tag-rules.json").mkString)
 
     def strToResourceType(str: String): ResourceType.Value =
       ResourceType
@@ -38,8 +33,8 @@ object EmbedTagRules {
         .getOrElse(
           throw new ConfigurationException(s"Missing declaration of resource type '$str' in ResourceType enum"))
 
-    attrs.get.map {
-      case (resourceType, attrRules) => strToResourceType(resourceType) -> TagRules.toTagAttributeRules(attrRules)
+    attrs.map {
+      case (resourceType, attrRules) => strToResourceType(resourceType) -> attrRules
     }
   }
 }

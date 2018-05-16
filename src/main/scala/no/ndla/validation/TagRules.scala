@@ -1,12 +1,14 @@
 package no.ndla.validation
 
+import org.json4s.JsonAST.JObject
 import org.json4s.native.JsonMethods._
+import org.json4s.ext._
 
 object TagRules {
   case class TagAttributeRules(required: Set[TagAttributes.Value],
                                optional: Seq[Set[TagAttributes.Value]],
                                validSrcDomains: Option[Seq[String]],
-                               mustContainAtLeastOneAttribute: Boolean) {
+                               mustContainAtLeastOneAttribute: Boolean = false) {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
   }
 
@@ -14,35 +16,13 @@ object TagRules {
     def empty = TagAttributeRules(Set.empty, Seq.empty, None, false)
   }
 
-  def toTagAttributeRules(map: Map[String, Any]) = {
-    val optionalAttrs: List[List[TagAttributes.Value]] = map
-      .get("optional")
-      .map(_.asInstanceOf[List[List[String]]].map(_.map(TagAttributes.getOrCreate)))
-      .getOrElse(List.empty)
+  def convertJsonStr(jsonStr: String): Map[String, TagAttributeRules] = {
+    implicit val formats = org.json4s.DefaultFormats + new EnumNameSerializer(TagAttributes)
 
-    val validSrcDomains: Option[Seq[String]] = map.get("validSrcDomains").map(_.asInstanceOf[Seq[String]])
-
-    val requiredAttrs: List[TagAttributes.Value] = map
-      .get("required")
-      .map(_.asInstanceOf[List[String]].map(TagAttributes.getOrCreate))
-      .getOrElse(List.empty)
-
-    val mustContainAtLeastOneAttribute = map
-      .get("mustContainAtLeastOneAttribute")
-      .map(_.asInstanceOf[Boolean])
-      .getOrElse(false) || requiredAttrs.nonEmpty
-
-    TagAttributeRules(
-      requiredAttrs.toSet,
-      optionalAttrs.map(_.toSet),
-      validSrcDomains,
-      mustContainAtLeastOneAttribute
-    )
-  }
-
-  def convertJsonStr(jsonStr: String): Map[String, Any] = {
-    implicit val formats = org.json4s.DefaultFormats
-    parse(jsonStr).extract[Map[String, Any]]
+    (parse(jsonStr) \ "attributes").extract[JObject].obj.map{
+      case (fieldName, fieldValue) =>
+        fieldName -> fieldValue.extract[TagAttributeRules]
+    }.toMap
   }
 }
 
@@ -70,7 +50,7 @@ object TagAttributes extends Enumeration {
   val DataEdition = Value("data-edition")
   val DataPublisher = Value("data-publisher")
   val DataAuthors = Value("data-authors")
-  val DataArticleIds = Value("data-article-ids")
+  val DataArticleId = Value("data-article-id")
 
   val DataUpperLeftY = Value("data-upper-left-y")
   val DataUpperLeftX = Value("data-upper-left-x")
@@ -89,6 +69,9 @@ object TagAttributes extends Enumeration {
   val Rel = Value("rel")
   val Class = Value("class")
   val Lang = Value("lang")
+  val Rowspan = Value("rowspan")
+  val Colspan = Value("colspan")
+  val Name = Value("name")
 
   private[validation] def getOrCreate(s: String): TagAttributes.Value = {
     valueOf(s).getOrElse(Value(s))

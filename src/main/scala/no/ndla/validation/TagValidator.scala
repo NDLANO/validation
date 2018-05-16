@@ -21,7 +21,7 @@ class TagValidator {
     document
       .select("*")
       .asScala
-      .flatMap((tag) => {
+      .flatMap(tag => {
         if (tag.tagName == ResourceHtmlEmbedTag) validateEmbedTag(fieldName, tag) else validateHtmlTag(fieldName, tag)
       })
       .toList
@@ -70,7 +70,7 @@ class TagValidator {
       attributesContainsNoHtml(fieldName, legalAttributes) ++
       verifyAttributeResource(fieldName, legalAttributes)
 
-    validationErrors.toList
+    validationErrors
   }
 
   private def attributesAreLegal(fieldName: String,
