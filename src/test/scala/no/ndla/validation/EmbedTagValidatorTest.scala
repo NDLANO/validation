@@ -325,4 +325,25 @@ class EmbedTagValidatorTest extends UnitSuite {
     val res = embedTagValidator.validate("content", "<span>lorem ipsum</span>")
     res.size should equal(1)
   }
+
+  test("validate should return error if related content doesnt contain either ids or url and title") {
+    val validRelatedExternalEmbed = """<embed data-resource="related-content" data-url="http://example.com" data-title="Eksempel tittel right here, yo">"""
+    val validRelatedArticle = """<embed data-resource="related-content" data-article-id="5">"""
+    val invalidRelatedArticle = """<embed data-resource="related-content" data-url="http://example.com">"""
+    val emptyAndInvalidEmbed = """<embed data-resource="related-content">"""
+
+    val res = embedTagValidator.validate("content", s"""<div data-type="related-content">$validRelatedExternalEmbed$validRelatedArticle</div>""")
+    res.size should be(0)
+    val res2 = embedTagValidator.validate("content", s"""<div data-type="related-content">$invalidRelatedArticle</div>""")
+    res2.size should be(1)
+    val res3 = embedTagValidator.validate("content", s"""<div data-type="related-content">$emptyAndInvalidEmbed</div>""")
+    res3.size should be(1)
+  }
+
+  test("validate should return error if related content is not wrapped in div with data-type='related-content'") {
+    val validRelatedExternalEmbed = """<embed data-resource="related-content" data-url="http://example.com" data-title="Eksempel tittel right here, yo">"""
+
+    val res = embedTagValidator.validate("content", s"""<div>$validRelatedExternalEmbed</div>""")
+    res.size should be(1)
+  }
 }

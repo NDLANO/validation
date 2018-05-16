@@ -15,6 +15,9 @@
       "optional": [
         [
           "class"
+        ],
+        [
+          "data-type"
         ]
       ]
     },
