@@ -345,5 +345,12 @@ class EmbedTagValidatorTest extends UnitSuite {
 
     val res = embedTagValidator.validate("content", s"""<div>$validRelatedExternalEmbed</div>""")
     res.size should be(1)
+    res.head.message should be("""Embed tag with 'related-content' requires a parent 'div', with attributes: 'data-type="related-content"'""")
+    val res2 = embedTagValidator.validate("content", s"""$validRelatedExternalEmbed""")
+    res2.size should be(1)
+    res2.head.message should be("""Embed tag with 'related-content' requires a parent 'div', with attributes: 'data-type="related-content"'""")
+    val res3 = embedTagValidator.validate("content", s"""<p data-type='related-content'>$validRelatedExternalEmbed</p>""")
+    res3.size should be(2)
+    res3.last.message should be("""Embed tag with 'related-content' requires a parent 'div', with attributes: 'data-type="related-content"'""")
   }
 }

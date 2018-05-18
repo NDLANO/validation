@@ -14,7 +14,7 @@ object TagRules {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
   }
 
-  case class ParentTag(name: String, requiredAttr: List[(String, String)]) // For some reason mustBeDirectChildOf becomes None when name of requiredAttr matches that in json
+  case class ParentTag(name: String, requiredAttr: List[(String, String)])
 
 
   object TagAttributeRules {

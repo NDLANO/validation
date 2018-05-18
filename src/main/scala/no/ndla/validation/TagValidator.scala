@@ -69,15 +69,36 @@ class TagValidator {
     val validationErrors = attributesAreLegal(fieldName, allAttributesOnTag, ResourceHtmlEmbedTag) ++
       attributesContainsNoHtml(fieldName, legalAttributes) ++
       verifyAttributeResource(fieldName, legalAttributes) ++
-      verifyParent(embed)
+      verifyParent(fieldName, legalAttributes, embed)
 
     validationErrors
   }
 
-  private def verifyParent(element: Element): Seq[ValidationMessage] = {
+  private def verifyParent(fieldName: String,
+                           attributes: Map[TagAttributes.Value, String],
+                           embed: Element): Seq[ValidationMessage] = {
 
-    val requiredParent
+    val resourceType = ResourceType.valueOf(attributes(TagAttributes.DataResource)).get // TODO: vil vi gette her? hva er vitsen med option da?
+    val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
 
+    val msgs = attributeRulesForTag.mustBeDirectChildOf.toSeq.flatMap(parentRule => {
+      val parent = embed.parent()
+      val expectedButMissingParentAttributes = parentRule.requiredAttr.filterNot {
+        case (attrKey, attrVal) => parent.attr(attrKey) == attrVal
+      }
+
+      if (parent.tagName() != parentRule.name || expectedButMissingParentAttributes.nonEmpty) {
+        val messageString =
+          s"Embed tag with '${resourceType.toString}' requires a parent '${parentRule.name}', with attributes: '${parentRule.requiredAttr
+            .map { case (key, value) => s"""$key="$value"""" }
+            .mkString(", ")}'"
+
+        Seq(ValidationMessage(fieldName, messageString))
+      } else {
+        Seq.empty
+      }
+    })
+    msgs
   }
 
   private def attributesAreLegal(fieldName: String,
