@@ -9,13 +9,11 @@ object TagRules {
                                optional: Seq[Set[TagAttributes.Value]],
                                validSrcDomains: Option[Seq[String]],
                                mustBeDirectChildOf: Option[ParentTag],
-                               mustContainAtLeastOneAttribute: Boolean = false
-                              ) {
+                               mustContainAtLeastOneOptionalAttribute: Boolean = false) {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
   }
 
   case class ParentTag(name: String, requiredAttr: List[(String, String)])
-
 
   object TagAttributeRules {
     def empty = TagAttributeRules(Set.empty, Seq.empty, None, None)
@@ -24,10 +22,14 @@ object TagRules {
   def convertJsonStrToAttributeRules(jsonStr: String): Map[String, TagAttributeRules] = {
     implicit val formats = org.json4s.DefaultFormats + new EnumNameSerializer(TagAttributes)
 
-    (parse(jsonStr) \ "attributes").extract[JObject].obj.map{
-      case (fieldName, fieldValue) =>
-        fieldName -> fieldValue.extract[TagAttributeRules]
-    }.toMap
+    (parse(jsonStr) \ "attributes")
+      .extract[JObject]
+      .obj
+      .map {
+        case (fieldName, fieldValue) =>
+          fieldName -> fieldValue.extract[TagAttributeRules]
+      }
+      .toMap
   }
 }
 

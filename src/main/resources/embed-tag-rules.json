@@ -116,6 +116,7 @@
       ]
     },
     "related-content": {
+      "mustContainAtLeastOneOptionalAttribute": true,
       "required": [
         "data-resource"
       ],
