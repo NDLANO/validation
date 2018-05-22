@@ -1,7 +1,7 @@
 {
   "attributes": {
     "span": {
-      "mustContainAtLeastOneAttribute": true,
+      "mustContainAtLeastOneOptionalAttribute": true,
       "optional": [
         [
           "lang"
@@ -15,6 +15,9 @@
       "optional": [
         [
           "class"
+        ],
+        [
+          "data-type"
         ]
       ]
     },

@@ -12,7 +12,8 @@ import no.ndla.mapping.UnitSuite
 class HtmlTagRulesTest extends UnitSuite {
   test("embed tag should be an allowed tag and contain data attributes") {
     HtmlTagRules.isTagValid("embed")
-    val dataAttrs = TagAttributes.values.map(_.toString).filter(x => x.startsWith("data-") && x != TagAttributes.DataType.toString)
+    val dataAttrs =
+      TagAttributes.values.map(_.toString).filter(x => x.startsWith("data-") && x != TagAttributes.DataType.toString)
     val legalEmbedAttrs = HtmlTagRules.legalAttributesForTag("embed")
     dataAttrs.foreach(x => legalEmbedAttrs should contain(x))
   }
@@ -35,13 +36,14 @@ class HtmlTagRulesTest extends UnitSuite {
 
   test("span tag should be an allowed tag and contain one lang attribute") {
     HtmlTagRules.isTagValid("span")
-    val dataAttrs = TagAttributes.values.map(_.toString).filter(x => x.startsWith("lang") && x != TagAttributes.DataType.toString)
+    val dataAttrs =
+      TagAttributes.values.map(_.toString).filter(x => x.startsWith("lang") && x != TagAttributes.DataType.toString)
     val legalEmbedAttrs = HtmlTagRules.legalAttributesForTag("span")
     dataAttrs.foreach(x => legalEmbedAttrs should contain(x))
   }
 
   test("math should be legal") {
-    HtmlTagRules.isTagValid("math") should be (true)
+    HtmlTagRules.isTagValid("math") should be(true)
   }
 
 }

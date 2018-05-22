@@ -15,15 +15,14 @@ class EmbedTagRulesTest extends UnitSuite {
     val resourceTypesFromConfigFile = EmbedTagRules.attributeRules.keys
     val resourceTypesFromEnumDeclaration = ResourceType.values
 
-    resourceTypesFromEnumDeclaration should equal (resourceTypesFromConfigFile)
+    resourceTypesFromEnumDeclaration should equal(resourceTypesFromConfigFile)
   }
 
   test("data-resource should be required for all resource types") {
     val resourceTypesFromConfigFile = EmbedTagRules.attributeRules.keys
 
     resourceTypesFromConfigFile.foreach(resType =>
-      EmbedTagRules.attributesForResourceType(resType).required should contain(TagAttributes.DataResource)
-    )
+      EmbedTagRules.attributesForResourceType(resType).required should contain(TagAttributes.DataResource))
   }
 
 }
