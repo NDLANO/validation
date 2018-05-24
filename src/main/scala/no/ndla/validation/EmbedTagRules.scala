@@ -52,6 +52,7 @@ object ResourceType extends Enumeration {
   val ConceptLink = Value("concept")
   val FootNote = Value("footnote")
   val RelatedContent = Value("related-content")
+  val File = Value("file")
 
   def all: Set[String] = ResourceType.values.map(_.toString)
 

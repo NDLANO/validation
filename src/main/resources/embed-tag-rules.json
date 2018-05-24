@@ -136,7 +136,28 @@
           }
         ]
       }
+    },
+    "file": {
+      "mustContainAtLeastOneOptionalAttribute": true,
+      "required": [
+        "data-resource"
+      ],
+      "optional": [
+        [
+          "data-title",
+          "data-url"
+        ], [
+          "data-type"
+        ]
+      ],
+      "mustBeDirectChildOf": {
+        "name": "div",
+        "requiredAttr": [
+          {
+            "data-type": "file"
+          }
+        ]
+      }
     }
-
   }
 }
