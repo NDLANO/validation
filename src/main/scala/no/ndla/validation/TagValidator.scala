@@ -106,13 +106,25 @@ class TagValidator {
     }
 
     val resourceType = ResourceType.valueOf(attributes(TagAttributes.DataResource)).get
-    val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
 
-    val partialErrorMessage = s"An $ResourceHtmlEmbedTag HTML tag with ${TagAttributes.DataResource}=$resourceType"
+    attributes.get(TagAttributes.DataResource).map(dr => {
+      ResourceType.valueOf(dr) match {
+        case Some(dataResource) =>
+          val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
 
-    verifyEmbedTagBasedOnResourceType(fieldName, attributeRulesForTag, attributeKeys, resourceType) ++
-      verifyOptionals(fieldName, attributeRulesForTag, attributeKeys, partialErrorMessage) ++
-      verifySourceUrl(fieldName, attributeRulesForTag, attributes, resourceType)
+          val partialErrorMessage = s"An $ResourceHtmlEmbedTag HTML tag with ${TagAttributes.DataResource}=$resourceType"
+
+          verifyEmbedTagBasedOnResourceType(fieldName, attributeRulesForTag, attributeKeys, resourceType) ++
+            verifyOptionals(fieldName, attributeRulesForTag, attributeKeys, partialErrorMessage) ++
+            verifySourceUrl(fieldName, attributeRulesForTag, attributes, resourceType)
+        case _ =>
+          Seq(ValidationMessage(fieldName, "Something went wrong when determining resourceType of embed"))
+      }
+    })
+    .getOrElse(Seq(
+      ValidationMessage(fieldName,
+                        s"Embed-tag did not contain any ${TagAttributes.DataResource.toString} attribute.")))
+
   }
 
   private def verifyEmbedTagBasedOnResourceType(fieldName: String, attrRules: TagAttributeRules, actualAttributes: Set[TagAttributes.Value], resourceType: ResourceType.Value): Seq[ValidationMessage] = {
