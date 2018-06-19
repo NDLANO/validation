@@ -93,7 +93,6 @@
       ],
       "validSrcDomains": [
         "prezi.com",
-        "www.commoncraft.com",
         "ndla.filmiundervisning.no",
         "embed.kahoot.it",
         ".*.khanacademy.org",
@@ -101,7 +100,9 @@
         "tv2skole.no",
         ".*.tv2skole.no",
         "www.scribd.com",
-        "www.vg.no"
+        "www.vg.no",
+        "livestream.com",
+        ".*.livestream.com"
       ]
     },
     "footnote": {
