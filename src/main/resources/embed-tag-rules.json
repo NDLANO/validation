@@ -102,7 +102,8 @@
         "www.scribd.com",
         "www.vg.no",
         "livestream.com",
-        ".*.livestream.com"
+        ".*.livestream.com",
+        "channel9.msdn.com"
       ]
     },
     "footnote": {
