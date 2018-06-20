@@ -17,14 +17,16 @@ class TextValidator(allowHtml: Boolean) {
   private val FieldEmpty = "Required field is empty"
   private val TagValidator = new TagValidator
 
-  def validate(fieldPath: String, text: String): Seq[ValidationMessage] = {
+  def validate(fieldPath: String, text: String, validateEmbedTagParent: Boolean = true): Seq[ValidationMessage] = {
     allowHtml match {
-      case true  => validateOnlyBasicHtmlTags(fieldPath, text)
+      case true  => validateOnlyBasicHtmlTags(fieldPath, text, validateEmbedTagParent)
       case false => validateNoHtmlTags(fieldPath, text).toList
     }
   }
 
-  private def validateOnlyBasicHtmlTags(fieldPath: String, text: String): Seq[ValidationMessage] = {
+  private def validateOnlyBasicHtmlTags(fieldPath: String,
+                                        text: String,
+                                        validateParent: Boolean = true): Seq[ValidationMessage] = {
     val whiteList = new Whitelist().addTags(HtmlTagRules.allLegalTags.toSeq: _*)
 
     HtmlTagRules.allLegalTags
@@ -38,7 +40,7 @@ class TextValidator(allowHtml: Boolean) {
           case true  => None
           case false => Some(ValidationMessage(fieldPath, IllegalContentInBasicText))
         }
-        TagValidator.validate(fieldPath, text) ++ jsoupValidatorMessages.toSeq
+        TagValidator.validate(fieldPath, text, validateParent) ++ jsoupValidatorMessages.toSeq
       }
 
     }
