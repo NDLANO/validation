@@ -8,7 +8,7 @@
 package no.ndla.validation
 
 import com.netaporter.uri.dsl._
-import no.ndla.validation.EmbedTagRules.{ResourceHtmlEmbedTag}
+import no.ndla.validation.EmbedTagRules.ResourceHtmlEmbedTag
 import no.ndla.validation.TagRules.TagAttributeRules
 import org.jsoup.nodes.Element
 
@@ -16,13 +16,14 @@ import scala.collection.JavaConverters._
 
 class TagValidator {
 
-  def validate(fieldName: String, content: String): Seq[ValidationMessage] = {
+  def validate(fieldName: String, content: String, validateParent: Boolean = true): Seq[ValidationMessage] = {
     val document = HtmlTagRules.stringToJsoupDocument(content)
     document
       .select("*")
       .asScala
       .flatMap(tag => {
-        if (tag.tagName == ResourceHtmlEmbedTag) validateEmbedTag(fieldName, tag) else validateHtmlTag(fieldName, tag)
+        if (tag.tagName == ResourceHtmlEmbedTag) validateEmbedTag(fieldName, tag, validateParent)
+        else validateHtmlTag(fieldName, tag)
       })
       .toList
 
@@ -59,7 +60,9 @@ class TagValidator {
     validationErrors ++ missingErrors ++ optionalErrors
   }
 
-  private def validateEmbedTag(fieldName: String, embed: Element): Seq[ValidationMessage] = {
+  private def validateEmbedTag(fieldName: String,
+                               embed: Element,
+                               validateParent: Boolean = true): Seq[ValidationMessage] = {
     if (embed.tagName != ResourceHtmlEmbedTag)
       return Seq()
 
@@ -69,7 +72,7 @@ class TagValidator {
     val validationErrors = attributesAreLegal(fieldName, allAttributesOnTag, ResourceHtmlEmbedTag) ++
       attributesContainsNoHtml(fieldName, legalAttributes) ++
       verifyAttributeResource(fieldName, legalAttributes) ++
-      verifyParent(fieldName, legalAttributes, embed) ++
+      verifyParent(fieldName, legalAttributes, embed, validateParent) ++
       verifyRequiredOptional(fieldName, legalAttributes, embed)
 
     validationErrors
@@ -77,38 +80,42 @@ class TagValidator {
 
   private def verifyParent(fieldName: String,
                            attributes: Map[TagAttributes.Value, String],
-                           embed: Element): Seq[ValidationMessage] = {
-    attributes
-      .get(TagAttributes.DataResource)
-      .map(resourceTypeString => {
-        ResourceType.valueOf(resourceTypeString) match {
-          case Some(resourceType) =>
-            val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
-            val legalOptionals = attributeRulesForTag.optional.flatten.toSet
-            val legalOptionalAttributesUsed = attributes.keySet.intersect(legalOptionals)
+                           embed: Element,
+                           validateParent: Boolean = true): Seq[ValidationMessage] = {
+    if (validateParent) {
+      attributes
+        .get(TagAttributes.DataResource)
+        .map(resourceTypeString => {
+          ResourceType.valueOf(resourceTypeString) match {
+            case Some(resourceType) =>
+              val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
+              val legalOptionals = attributeRulesForTag.optional.flatten.toSet
 
-            attributeRulesForTag.mustBeDirectChildOf.toSeq.flatMap(parentRule => {
-              val parent = embed.parent()
-              val expectedButMissingParentAttributes = parentRule.requiredAttr.filterNot {
-                case (attrKey, attrVal) => parent.attr(attrKey) == attrVal
-              }
+              attributeRulesForTag.mustBeDirectChildOf.toSeq.flatMap(parentRule => {
+                val parent = embed.parent()
+                val expectedButMissingParentAttributes = parentRule.requiredAttr.filterNot {
+                  case (attrKey, attrVal) => parent.attr(attrKey) == attrVal
+                }
 
-              if (parent.tagName() != parentRule.name || expectedButMissingParentAttributes.nonEmpty) {
-                val messageString =
-                  s"Embed tag with '${resourceType.toString}' requires a parent '${parentRule.name}', with attributes: '${parentRule.requiredAttr
-                    .map { case (key, value) => s"""$key="$value"""" }
-                    .mkString(", ")}'"
+                if (parent.tagName() != parentRule.name || expectedButMissingParentAttributes.nonEmpty) {
+                  val messageString =
+                    s"Embed tag with '${resourceType.toString}' requires a parent '${parentRule.name}', with attributes: '${parentRule.requiredAttr
+                      .map { case (key, value) => s"""$key="$value"""" }
+                      .mkString(", ")}'"
 
-                Seq(ValidationMessage(fieldName, messageString))
-              } else {
-                Seq.empty
-              }
-            })
-          case _ =>
-            Seq(ValidationMessage(fieldName, "Something went wrong when determining resourceType of embed"))
-        }
-      })
-      .getOrElse(Seq.empty)
+                  Seq(ValidationMessage(fieldName, messageString))
+                } else {
+                  Seq.empty
+                }
+              })
+            case _ =>
+              Seq(ValidationMessage(fieldName, "Something went wrong when determining resourceType of embed"))
+          }
+        })
+        .getOrElse(Seq.empty)
+    } else {
+      Seq.empty
+    }
   }
 
   private def verifyRequiredOptional(fieldName: String,
