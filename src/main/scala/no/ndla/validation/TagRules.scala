@@ -58,6 +58,7 @@ object TagAttributes extends Enumeration {
   val DataPublisher = Value("data-publisher")
   val DataAuthors = Value("data-authors")
   val DataArticleId = Value("data-article-id")
+  val DataPath = Value("data-path")
 
   val DataUpperLeftY = Value("data-upper-left-y")
   val DataUpperLeftX = Value("data-upper-left-x")
