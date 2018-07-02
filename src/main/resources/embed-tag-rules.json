@@ -148,9 +148,13 @@
         "data-path"
       ],
       "optional": [
-        [ "data-type" ]
+        [ "data-type" ],
+        [ "data-alt" ]
       ],
       "mustBeDirectChildOf": {
+        "conditions": {
+          "childCount": ">1"
+        },
         "name": "div",
         "requiredAttr": [
           {

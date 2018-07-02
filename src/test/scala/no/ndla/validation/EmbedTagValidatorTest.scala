@@ -9,6 +9,7 @@ package no.ndla.validation
 
 import no.ndla.mapping.UnitSuite
 import no.ndla.validation.EmbedTagRules.ResourceHtmlEmbedTag
+import no.ndla.validation.TagRules.Condition
 
 class EmbedTagValidatorTest extends UnitSuite {
   val embedTagValidator = new TagValidator()
@@ -372,6 +373,45 @@ class EmbedTagValidatorTest extends UnitSuite {
     val res =
       embedTagValidator.validate("content", s"""<div>$validRelatedExternalEmbed</div>""", validateParent = false)
     res.size should be(0)
+  }
+
+  test("checkParentConditions should work for < operator") {
+    val result1 = embedTagValidator.checkParentConditions("test", Condition("apekatt<2"), 3)
+    result1.left.get should be(Seq(ValidationMessage("test", "Parent condition block is invalid.")))
+
+    val result2 = embedTagValidator.checkParentConditions("test", Condition("<2"), 3)
+    result2.right.get should be(false)
+
+    val result3 = embedTagValidator.checkParentConditions("test", Condition("<2"), 1)
+    result3.right.get should be(true)
+  }
+
+  test("checkParentConditions should work for > operator") {
+    val result1 = embedTagValidator.checkParentConditions("test", Condition("apekatt>2"), 3)
+    result1.left.get should be(Seq(ValidationMessage("test", "Parent condition block is invalid.")))
+
+    val result2 = embedTagValidator.checkParentConditions("test", Condition(">2"), 3)
+    result2.right.get should be(true)
+
+    val result3 = embedTagValidator.checkParentConditions("test", Condition(">2"), 1)
+    result3.right.get should be(false)
+  }
+
+  test("checkParentConditions should work for = operator") {
+    val result1 = embedTagValidator.checkParentConditions("test", Condition("apekatt=2"), 3)
+    result1.left.get should be(Seq(ValidationMessage("test", "Parent condition block is invalid.")))
+
+    val result2 = embedTagValidator.checkParentConditions("test", Condition("=2"), 2)
+    result2.right.get should be(true)
+
+    val result3 = embedTagValidator.checkParentConditions("test", Condition("=2"), 1)
+    result3.right.get should be(false)
+
+    val result4 = embedTagValidator.checkParentConditions("test", Condition("2"), 2)
+    result4.right.get should be(true)
+
+    val result5 = embedTagValidator.checkParentConditions("test", Condition("2"), 1)
+    result5.right.get should be(false)
   }
 
 }

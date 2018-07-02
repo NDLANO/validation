@@ -13,7 +13,8 @@ object TagRules {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
   }
 
-  case class ParentTag(name: String, requiredAttr: List[(String, String)])
+  case class ParentTag(name: String, requiredAttr: List[(String, String)], conditions: Option[Condition])
+  case class Condition(childCount: String)
 
   object TagAttributeRules {
     def empty = TagAttributeRules(Set.empty, Seq.empty, None, None)
