@@ -98,7 +98,7 @@ class TagValidator {
                 }
 
                 val parentEither = parentRule.conditions
-                  .map(c => checkParentConditions(fieldName, c, parent.children.size))
+                  .map(checkParentConditions(fieldName, _, parent.children.size))
                   .getOrElse(Right(true))
 
                 if ((parent
@@ -135,10 +135,16 @@ class TagValidator {
         noSpace.charAt(0) match {
           case '>' => Right(childCount > expectedChildNum)
           case '<' => Right(childCount < expectedChildNum)
-          case _   => Right(childCount == expectedChildNum)
+          case '=' => Right(childCount == expectedChildNum)
+          case _   => Left(Seq(ValidationMessage(fieldName, "Could not find supported operator (<, > or =)")))
         }
       case _ =>
-        Left(Seq(ValidationMessage(fieldName, "Parent condition block is invalid.")))
+        Left(
+          Seq(
+            ValidationMessage(
+              fieldName,
+              "Parent condition block is invalid. " +
+                "childCount must start with a supported operator (<, >, =) and consist of an integer (Ex: '> 1').")))
     }
   }
 
