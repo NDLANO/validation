@@ -142,19 +142,19 @@
       }
     },
     "file": {
-      "mustContainAtLeastOneOptionalAttribute": true,
       "required": [
-        "data-resource"
+        "data-resource",
+        "data-title",
+        "data-path"
       ],
       "optional": [
-        [
-          "data-title",
-          "data-url"
-        ], [
-          "data-type"
-        ]
+        [ "data-type" ],
+        [ "data-alt" ]
       ],
       "mustBeDirectChildOf": {
+        "conditions": {
+          "childCount": ">1"
+        },
         "name": "div",
         "requiredAttr": [
           {

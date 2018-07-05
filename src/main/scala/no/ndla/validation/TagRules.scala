@@ -13,7 +13,8 @@ object TagRules {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
   }
 
-  case class ParentTag(name: String, requiredAttr: List[(String, String)])
+  case class ParentTag(name: String, requiredAttr: List[(String, String)], conditions: Option[Condition])
+  case class Condition(childCount: String)
 
   object TagAttributeRules {
     def empty = TagAttributeRules(Set.empty, Seq.empty, None, None)
@@ -58,6 +59,7 @@ object TagAttributes extends Enumeration {
   val DataPublisher = Value("data-publisher")
   val DataAuthors = Value("data-authors")
   val DataArticleId = Value("data-article-id")
+  val DataPath = Value("data-path")
 
   val DataUpperLeftY = Value("data-upper-left-y")
   val DataUpperLeftX = Value("data-upper-left-x")

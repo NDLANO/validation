@@ -13,6 +13,7 @@ import no.ndla.validation.TagRules.TagAttributeRules
 import org.jsoup.nodes.Element
 
 import scala.collection.JavaConverters._
+import scala.util.{Failure, Success, Try}
 
 class TagValidator {
 
@@ -89,7 +90,6 @@ class TagValidator {
           ResourceType.valueOf(resourceTypeString) match {
             case Some(resourceType) =>
               val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
-              val legalOptionals = attributeRulesForTag.optional.flatten.toSet
 
               attributeRulesForTag.mustBeDirectChildOf.toSeq.flatMap(parentRule => {
                 val parent = embed.parent()
@@ -97,13 +97,20 @@ class TagValidator {
                   case (attrKey, attrVal) => parent.attr(attrKey) == attrVal
                 }
 
-                if (parent.tagName() != parentRule.name || expectedButMissingParentAttributes.nonEmpty) {
-                  val messageString =
-                    s"Embed tag with '${resourceType.toString}' requires a parent '${parentRule.name}', with attributes: '${parentRule.requiredAttr
-                      .map { case (key, value) => s"""$key="$value"""" }
-                      .mkString(", ")}'"
+                val parentEither = parentRule.conditions
+                  .map(checkParentConditions(fieldName, _, parent.children.size))
+                  .getOrElse(Right(true))
 
-                  Seq(ValidationMessage(fieldName, messageString))
+                if ((parent
+                      .tagName() != parentRule.name || expectedButMissingParentAttributes.nonEmpty) && parentEither.right
+                      .getOrElse(true)) {
+                  val requiredAttributes = parentRule.requiredAttr
+                    .map { case (key, value) => s"""$key="$value"""" }
+                    .mkString(", ")
+                  val messageString =
+                    s"Embed tag with '${resourceType.toString}' requires a parent '${parentRule.name}', with attributes: '$requiredAttributes'"
+
+                  Seq(ValidationMessage(fieldName, messageString)) ++ parentEither.left.getOrElse(Seq.empty)
                 } else {
                   Seq.empty
                 }
@@ -115,6 +122,29 @@ class TagValidator {
         .getOrElse(Seq.empty)
     } else {
       Seq.empty
+    }
+  }
+
+  private[validation] def checkParentConditions(fieldName: String,
+                                                condition: TagRules.Condition,
+                                                childCount: Int): Either[Seq[ValidationMessage], Boolean] = {
+    val noSpace = condition.childCount.replace(" ", "")
+    // Remove operator character and attempt to turn number to Int
+    Try(noSpace.replaceFirst("[<>=]", "").toInt) match {
+      case Success(expectedChildNum) =>
+        noSpace.charAt(0) match {
+          case '>' => Right(childCount > expectedChildNum)
+          case '<' => Right(childCount < expectedChildNum)
+          case '=' => Right(childCount == expectedChildNum)
+          case _   => Left(Seq(ValidationMessage(fieldName, "Could not find supported operator (<, > or =)")))
+        }
+      case _ =>
+        Left(
+          Seq(
+            ValidationMessage(
+              fieldName,
+              "Parent condition block is invalid. " +
+                "childCount must start with a supported operator (<, >, =) and consist of an integer (Ex: '> 1').")))
     }
   }
 
