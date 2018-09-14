@@ -427,4 +427,58 @@ class EmbedTagValidatorTest extends UnitSuite {
     result5.left.get should be(Seq(ValidationMessage("test", "Could not find supported operator (<, > or =)")))
   }
 
+  test("validate should should allow single file embeds with multiple unrelated siblings") {
+    val content =
+      """<section><embed data-alt="Øvingsark for teiknskriving for leksjon 1" data-path="files/147739/ovelsesark_for_tegnskriving_for_leksjon_1.pdf" data-resource="file" data-title="Øvelsesark for tegnskriving for leksjon 1" data-type="pdf"><p><span data-size="large">你</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163943"><p><span data-size="large">您</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163944"><p><span data-size="large">好</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163946"><p><span data-size="large">李</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163948"><p><span data-size="large">美</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163950"><p><span data-size="large">玉</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163952"><p><span data-size="large">马</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163953"><p><span data-size="large">红</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163956"><p><span data-size="large">老</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163959"><p><span data-size="large">师</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:163960"><p><span data-size="large">贵</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164025"><p><span data-size="large">姓</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164029"><p><span data-size="large">王</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164031"><p><span data-size="large">们</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164032"><p><span data-size="large">我</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164034"><p><span data-size="large">叫</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164035"><p><span data-size="large">什</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164036"><p><span data-size="large">么</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164037"><p><span data-size="large">名</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164038"><p><span data-size="large">字</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164039"><p><span data-size="large">呢</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164067"><p><span data-size="large">认</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164069"><p><span data-size="large">识</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164072"><p><span data-size="large">很</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164077"><p><span data-size="large">高</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164078"><p><span data-size="large">兴</span></p><embed data-account="4806596774001" data-caption="" data-player="BkLm8fT" data-resource="brightcove" data-videoid="ref:164079"></section>"""
+
+    val res = embedTagValidator.validate("content", content)
+    res.size should be(0)
+  }
+
+  test("That getNumEqualSiblings returns number of direct equal siblings") {
+    {
+      val content = """<section><p><embed type="a" data-resource="file"></p></section>"""
+      val embed = HtmlTagRules.stringToJsoupDocument(content).select("embed").first()
+      embedTagValidator.numDirectEqualSiblings(embed) should be(1)
+    }
+    {
+      val content =
+        """<section><p><embed type="a" data-resource="file"><embed type="b" data-resource="file"><embed type="c" data-resource="file"><embed type="d" data-resource="file"></p></section>"""
+      val embed = HtmlTagRules.stringToJsoupDocument(content).select("embed[type=b]").first()
+      embedTagValidator.numDirectEqualSiblings(embed) should be(4)
+    }
+    {
+      val content =
+        """<section><p><embed type="a" data-resource="file">, <embed type="b" data-resource="file">, <embed type="c" data-resource="file">, <embed type="d" data-resource="file"></p></section>"""
+      val embed = HtmlTagRules.stringToJsoupDocument(content).select("embed[type=d]").first()
+      embedTagValidator.numDirectEqualSiblings(embed) should be(1)
+    }
+    {
+      val content =
+        """<section><p><embed type="a" data-resource="file">, <embed type="b" data-resource="file">, <embed type="c" data-resource="file"><embed type="d" data-resource="file"></p></section>"""
+      val embed = HtmlTagRules.stringToJsoupDocument(content).select("embed[type=c]").first()
+      embedTagValidator.numDirectEqualSiblings(embed) should be(2)
+    }
+  }
+
+  test("getNumEqualSiblings should ignore only-whitespace siblings, but not text siblings") {
+    val content =
+      """<section>
+          |<p>
+          |<embed type="a" data-resource="file">awdk
+          |<embed type="b" data-resource="file">
+          |
+          |<embed type="c" data-resource="file">
+          |
+          |
+          |
+          |
+          |
+          |<embed type="d" data-resource="file">
+          |</p>
+          |</section>""".stripMargin
+    val embed = HtmlTagRules.stringToJsoupDocument(content).select("embed[type=c]").first()
+    embedTagValidator.numDirectEqualSiblings(embed) should be(3)
+  }
+
 }

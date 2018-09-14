@@ -10,7 +10,7 @@ package no.ndla.validation
 import com.netaporter.uri.dsl._
 import no.ndla.validation.EmbedTagRules.ResourceHtmlEmbedTag
 import no.ndla.validation.TagRules.TagAttributeRules
-import org.jsoup.nodes.Element
+import org.jsoup.nodes.{Element, Node}
 
 import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}
@@ -90,30 +90,27 @@ class TagValidator {
           ResourceType.valueOf(resourceTypeString) match {
             case Some(resourceType) =>
               val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
-
               attributeRulesForTag.mustBeDirectChildOf.toSeq.flatMap(parentRule => {
-                val parent = embed.parent()
-                val expectedButMissingParentAttributes = parentRule.requiredAttr.filterNot {
-                  case (attrKey, attrVal) => parent.attr(attrKey) == attrVal
-                }
-
                 val parentEither = parentRule.conditions
-                  .map(checkParentConditions(fieldName, _, parent.children.size))
+                  .map(checkParentConditions(fieldName, _, numDirectEqualSiblings(embed)))
                   .getOrElse(Right(true))
 
-                if ((parent
-                      .tagName() != parentRule.name || expectedButMissingParentAttributes.nonEmpty) && parentEither.right
-                      .getOrElse(true)) {
-                  val requiredAttributes = parentRule.requiredAttr
-                    .map { case (key, value) => s"""$key="$value"""" }
-                    .mkString(", ")
-                  val messageString =
-                    s"Embed tag with '${resourceType.toString}' requires a parent '${parentRule.name}', with attributes: '$requiredAttributes'"
+                if (parentEither.right.getOrElse(true)) {
+                  val parent = embed.parent()
+                  val expectedButMissingParentAttributes = parentRule.requiredAttr.filterNot {
+                    case (attrKey, attrVal) => parent.attr(attrKey) == attrVal
+                  }
 
-                  Seq(ValidationMessage(fieldName, messageString)) ++ parentEither.left.getOrElse(Seq.empty)
-                } else {
-                  Seq.empty
-                }
+                  if (parent.tagName() != parentRule.name || expectedButMissingParentAttributes.nonEmpty) {
+                    val requiredAttributes = parentRule.requiredAttr
+                      .map { case (key, value) => s"""$key="$value"""" }
+                      .mkString(", ")
+                    val messageString =
+                      s"Embed tag with '${resourceType.toString}' requires a parent '${parentRule.name}', with attributes: '$requiredAttributes'"
+
+                    Seq(ValidationMessage(fieldName, messageString)) ++ parentEither.left.getOrElse(Seq.empty)
+                  } else { Seq.empty }
+                } else { Seq.empty }
               })
             case _ =>
               Seq(ValidationMessage(fieldName, "Something went wrong when determining resourceType of embed"))
@@ -125,6 +122,45 @@ class TagValidator {
     }
   }
 
+  private def isSameEmbedType(embed: Element, n: Node): Boolean = {
+    n.nodeName() == embed.tagName &&
+    n.attr(TagAttributes.DataResource.toString) == embed.attr(TagAttributes.DataResource.toString)
+  }
+
+  /**
+    * Counts number of siblings that are next to the embed, with the same type.
+    *
+    * @param embed Embed tag to count direct siblings for
+    * @return Number of direct equal typed (data-resource) siblings
+    */
+  private[validation] def numDirectEqualSiblings(embed: Element): Int = {
+    // Every sibling that is not whitespace
+    val siblings = embed.parent
+      .childNodes()
+      .asScala
+      .filterNot(n => n.outerHtml().replaceAll("\\s", "") == "")
+
+    // Before siblings is reversed so we can use takeWhile
+    // We use drop(1) on after siblings because splitAt includes the element that is split at
+    val (beforeSiblings, afterSiblings) = siblings.splitAt(siblings.indexOf(embed)) match {
+      case (bs, as) => (bs.reverse, as.drop(1))
+    }
+
+    val afterWithoutEquals = afterSiblings.takeWhile(isSameEmbedType(embed, _))
+    val beforeWithoutEquals = beforeSiblings.takeWhile(isSameEmbedType(embed, _))
+
+    1 + afterWithoutEquals.size + beforeWithoutEquals.size // Itself + Number of equal sibling nodes before + Number of equal sibling nodes after
+  }
+
+  /**
+    * Checks whether parentConditions are met and returns an either with Right(true) if they are met and Right(left) if they are not.
+    * Either with Left suggests that the configuration for conditions were wrong.
+    *
+    * @param fieldName Name used in error message if check fails.
+    * @param condition Condition that needs to be satisfied to validate parent
+    * @param childCount Number of children the parent that is to be validated has
+    * @return Either with Left with list of error messages (if the condition is wrongly specified) or a Right with a Boolean stating whether the condition is satisfied or not
+    */
   private[validation] def checkParentConditions(fieldName: String,
                                                 condition: TagRules.Condition,
                                                 childCount: Int): Either[Seq[ValidationMessage], Boolean] = {
