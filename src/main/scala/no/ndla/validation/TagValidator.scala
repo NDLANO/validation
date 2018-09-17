@@ -146,14 +146,14 @@ class TagValidator {
       case (bs, as) => (bs.reverse, as.drop(1))
     }
 
-    val afterWithoutEquals = afterSiblings.takeWhile(isSameEmbedType(embed, _))
-    val beforeWithoutEquals = beforeSiblings.takeWhile(isSameEmbedType(embed, _))
+    val equalAfterSiblings = afterSiblings.takeWhile(isSameEmbedType(embed, _))
+    val equalBeforeSiblings = beforeSiblings.takeWhile(isSameEmbedType(embed, _))
 
-    1 + afterWithoutEquals.size + beforeWithoutEquals.size // Itself + Number of equal sibling nodes before + Number of equal sibling nodes after
+    1 + equalAfterSiblings.size + equalBeforeSiblings.size // Itself + Number of equal sibling nodes before + Number of equal sibling nodes after
   }
 
   /**
-    * Checks whether parentConditions are met and returns an either with Right(true) if they are met and Right(left) if they are not.
+    * Checks whether parentConditions are met and returns an either with Right(true) if they are met and Right(false) if they are not.
     * Either with Left suggests that the configuration for conditions were wrong.
     *
     * @param fieldName Name used in error message if check fails.
