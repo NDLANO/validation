@@ -7,7 +7,7 @@
 
 package no.ndla.validation
 
-import com.netaporter.uri.dsl._
+import io.lemonlabs.uri.dsl._
 import no.ndla.validation.EmbedTagRules.ResourceHtmlEmbedTag
 import no.ndla.validation.TagRules.TagAttributeRules
 import org.jsoup.nodes.{Element, Node}
@@ -353,7 +353,8 @@ class TagValidator {
                               resourceType: ResourceType.Value): Seq[ValidationMessage] = {
     usedAttributes.get(TagAttributes.DataUrl) match {
       case Some(url)
-          if attrs.validSrcDomains.nonEmpty && !attrs.validSrcDomains.get.exists(url.host.getOrElse("").matches) =>
+          if attrs.validSrcDomains.nonEmpty && !attrs.validSrcDomains.get.exists(
+            url.hostOption.getOrElse("").toString.matches) =>
         Seq(
           ValidationMessage(
             fieldName,
