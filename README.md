@@ -11,6 +11,9 @@ Library that provides common validation rules for NDLA components
 ## Run tests
     sbt test
 
+## Publish component locally for testing with other components
+    sbt publishLocal
+
 ## Build
     ./build.sh
 
