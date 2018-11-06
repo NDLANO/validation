@@ -1,5 +1,6 @@
-val Scalaversion = "2.12.6"
-val ScalaTestVersion = "3.0.1"
+val Scalaversion = "2.12.7"
+val ScalaTestVersion = "3.0.5"
+val Json4SVersion = "3.5.4"
 
 lazy val commonSettings = Seq(
   organization := "ndla",
@@ -17,9 +18,9 @@ lazy val validation = (project in file("."))
     scalacOptions := Seq("-target:jvm-1.8", "-deprecation"),
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
-      "org.jsoup" % "jsoup" % "1.10.3",
-      "org.json4s" %% "json4s-native" % "3.5.0",
-      "org.json4s" %% "json4s-ext" % "3.5.0",
+      "org.jsoup" % "jsoup" % "1.11.3",
+      "org.json4s" %% "json4s-native" % Json4SVersion,
+      "org.json4s" %% "json4s-ext" % Json4SVersion,
       "io.lemonlabs" %% "scala-uri" % "1.3.1"
     )
   )

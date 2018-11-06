@@ -161,9 +161,6 @@
         [ "data-alt" ]
       ],
       "mustBeDirectChildOf": {
-        "conditions": {
-          "childCount": ">1"
-        },
         "name": "div",
         "requiredAttr": [
           {
