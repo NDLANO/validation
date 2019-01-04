@@ -116,7 +116,10 @@
         "miljostatus.no",
         "phet.colorado.edu",
         "static.nrk.no",
-        "e.issuu.com"
+        "e.issuu.com",
+        "lab.concord.org",
+        ".*.worldbank.org",
+        "worldbank.org"
       ]
     },
     "footnote": {
