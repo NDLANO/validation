@@ -99,6 +99,13 @@
           "data-type"
         ]
       ]
+    },
+    "details": {
+      "optional": [
+        [
+          "class"
+        ]
+      ]
     }
   },
   "tags": [
