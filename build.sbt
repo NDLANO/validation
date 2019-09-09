@@ -1,6 +1,6 @@
-val Scalaversion = "2.12.7"
-val ScalaTestVersion = "3.0.5"
-val Json4SVersion = "3.5.4"
+val Scalaversion = "2.13.0"
+val ScalaTestVersion = "3.0.8"
+val Json4SVersion = "3.6.7"
 
 lazy val commonSettings = Seq(
   organization := "ndla",
@@ -21,7 +21,7 @@ lazy val validation = (project in file("."))
       "org.jsoup" % "jsoup" % "1.11.3",
       "org.json4s" %% "json4s-native" % Json4SVersion,
       "org.json4s" %% "json4s-ext" % Json4SVersion,
-      "io.lemonlabs" %% "scala-uri" % "1.3.1"
+      "io.lemonlabs" %% "scala-uri" % "1.5.1"
     )
   )
 
