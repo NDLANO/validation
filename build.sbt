@@ -1,4 +1,4 @@
-val Scalaversion = "2.12.7"
+val Scalaversion = "2.13.0"
 val ScalaTestVersion = "3.0.5"
 val Json4SVersion = "3.5.4"
 
