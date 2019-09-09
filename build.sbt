@@ -1,5 +1,5 @@
 val Scalaversion = "2.13.0"
-val ScalaTestVersion = "3.0.5"
+val ScalaTestVersion = "3.0.8"
 val Json4SVersion = "3.6.7"
 
 lazy val commonSettings = Seq(
