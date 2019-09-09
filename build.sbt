@@ -21,7 +21,7 @@ lazy val validation = (project in file("."))
       "org.jsoup" % "jsoup" % "1.11.3",
       "org.json4s" %% "json4s-native" % Json4SVersion,
       "org.json4s" %% "json4s-ext" % Json4SVersion,
-      "io.lemonlabs" %% "scala-uri" % "1.3.1"
+      "io.lemonlabs" %% "scala-uri" % "1.5.1"
     )
   )
 
