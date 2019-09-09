@@ -14,7 +14,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.nodes.Entities.EscapeMode
 import scala.io.Source
 import scala.language.postfixOps
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object HtmlTagRules {
 
