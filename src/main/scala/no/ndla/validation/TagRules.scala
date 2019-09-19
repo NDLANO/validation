@@ -11,6 +11,17 @@ object TagRules {
                                mustBeDirectChildOf: Option[ParentTag],
                                mustContainAtLeastOneOptionalAttribute: Boolean = false) {
     lazy val all: Set[TagAttributes.Value] = required ++ optional.flatten
+
+    def withOptionalRequired(toBeOptional: Seq[String]) = {
+      val toBeOptionalEnums = toBeOptional.flatMap(TagAttributes.valueOf)
+      val newReq = required.filterNot(toBeOptionalEnums.contains)
+      val newOpt = optional ++ toBeOptionalEnums.map(o => Set(o))
+
+      this.copy(
+        required = newReq,
+        optional = newOpt
+      )
+    }
   }
 
   case class ParentTag(name: String, requiredAttr: List[(String, String)], conditions: Option[Condition])
