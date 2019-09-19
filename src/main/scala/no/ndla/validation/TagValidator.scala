@@ -17,13 +17,19 @@ import scala.util.{Failure, Success, Try}
 
 class TagValidator {
 
-  def validate(fieldName: String, content: String, validateParent: Boolean = true): Seq[ValidationMessage] = {
+  def validate(
+      fieldName: String,
+      content: String,
+      validateParent: Boolean = true,
+      requiredToOptional: Map[String, Seq[String]] = Map.empty
+  ): Seq[ValidationMessage] = {
+
     val document = HtmlTagRules.stringToJsoupDocument(content)
     document
       .select("*")
       .asScala
       .flatMap(tag => {
-        if (tag.tagName == ResourceHtmlEmbedTag) validateEmbedTag(fieldName, tag, validateParent)
+        if (tag.tagName == ResourceHtmlEmbedTag) validateEmbedTag(fieldName, tag, validateParent, requiredToOptional)
         else validateHtmlTag(fieldName, tag)
       })
       .toList
@@ -61,9 +67,12 @@ class TagValidator {
     validationErrors ++ missingErrors ++ optionalErrors
   }
 
-  private def validateEmbedTag(fieldName: String,
-                               embed: Element,
-                               validateParent: Boolean = true): Seq[ValidationMessage] = {
+  private def validateEmbedTag(
+      fieldName: String,
+      embed: Element,
+      validateParent: Boolean = true,
+      requiredToOptional: Map[String, Seq[String]]
+  ): Seq[ValidationMessage] = {
     if (embed.tagName != ResourceHtmlEmbedTag)
       return Seq()
 
@@ -72,7 +81,7 @@ class TagValidator {
 
     val validationErrors = attributesAreLegal(fieldName, allAttributesOnTag, ResourceHtmlEmbedTag) ++
       attributesContainsNoHtml(fieldName, legalAttributes) ++
-      verifyAttributeResource(fieldName, legalAttributes) ++
+      verifyAttributeResource(fieldName, legalAttributes, requiredToOptional) ++
       verifyParent(fieldName, legalAttributes, embed, validateParent) ++
       verifyRequiredOptional(fieldName, legalAttributes, embed)
 
@@ -266,7 +275,8 @@ class TagValidator {
   }
 
   private def verifyAttributeResource(fieldName: String,
-                                      attributes: Map[TagAttributes.Value, String]): Seq[ValidationMessage] = {
+                                      attributes: Map[TagAttributes.Value, String],
+                                      requiredToOptional: Map[String, Seq[String]]): Seq[ValidationMessage] = {
     val attributeKeys = attributes.keySet
     if (!attributeKeys.contains(TagAttributes.DataResource)) {
       return ValidationMessage(
@@ -283,7 +293,9 @@ class TagValidator {
     }
 
     val resourceType = ResourceType.valueOf(attributes(TagAttributes.DataResource)).get
-    val attributeRulesForTag = EmbedTagRules.attributesForResourceType(resourceType)
+    val attributeRulesForTag = EmbedTagRules
+      .attributesForResourceType(resourceType)
+      .withOptionalRequired(requiredToOptional.get(resourceType.toString).getOrElse(Seq.empty))
 
     val partialErrorMessage = s"An $ResourceHtmlEmbedTag HTML tag with ${TagAttributes.DataResource}=$resourceType"
 

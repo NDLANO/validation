@@ -68,6 +68,21 @@ class EmbedTagValidatorTest extends UnitSuite {
       1)
   }
 
+  test("validate should return not validation error if embed tag misses moved required to optional") {
+    val tag = generateTagWithAttrs(
+      Map(
+        TagAttributes.DataResource -> ResourceType.Image.toString,
+        TagAttributes.DataResource_Id -> "1234",
+        TagAttributes.DataSize -> "fullbredde",
+        TagAttributes.DataAlign -> "",
+        TagAttributes.DataAlt -> "alttext"
+      ))
+    val res = embedTagValidator.validate("content",
+                                         tag,
+                                         requiredToOptional = Map("image" -> Seq(TagAttributes.DataCaption.toString)))
+    res should be(Seq.empty)
+  }
+
   test("validate should return no validation errors if image embed-tag is used correctly") {
     val tag = generateTagWithAttrs(
       Map(
