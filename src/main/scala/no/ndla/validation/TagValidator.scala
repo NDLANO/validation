@@ -12,7 +12,7 @@ import no.ndla.validation.EmbedTagRules.ResourceHtmlEmbedTag
 import no.ndla.validation.TagRules.TagAttributeRules
 import org.jsoup.nodes.{Element, Node}
 
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}
 
 class TagValidator {
@@ -95,7 +95,7 @@ class TagValidator {
                   .map(checkParentConditions(fieldName, _, numDirectEqualSiblings(embed)))
                   .getOrElse(Right(true))
 
-                if (parentEither.getOrElse(true)) {
+                if (parentEither.right.getOrElse(true)) {
                   val parent = embed.parent()
                   val expectedButMissingParentAttributes = parentRule.requiredAttr.filterNot {
                     case (attrKey, attrVal) => parent.attr(attrKey) == attrVal

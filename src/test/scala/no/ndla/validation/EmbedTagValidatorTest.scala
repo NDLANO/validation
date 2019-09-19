@@ -384,47 +384,47 @@ class EmbedTagValidatorTest extends UnitSuite {
 
   test("checkParentConditions should work for < operator") {
     val result1 = embedTagValidator.checkParentConditions("test", Condition("apekatt<2"), 3)
-    result1 should be(Left(childCountValidationMessage("test")))
+    result1.left.get should be(childCountValidationMessage("test"))
 
     val result2 = embedTagValidator.checkParentConditions("test", Condition("<2"), 3)
-    result2 should be(Right(false))
+    result2.right.get should be(false)
 
     val result3 = embedTagValidator.checkParentConditions("test", Condition("<2"), 1)
-    result3 should be(Right(true))
+    result3.right.get should be(true)
 
     val result4 = embedTagValidator.checkParentConditions("test", Condition("< 2"), 1)
-    result4 should be(Right(true))
+    result4.right.get should be(true)
   }
 
   test("checkParentConditions should work for > operator") {
     val result1 = embedTagValidator.checkParentConditions("test", Condition("apekatt>2"), 3)
-    result1 should be(Left(childCountValidationMessage("test")))
+    result1.left.get should be(childCountValidationMessage("test"))
 
     val result2 = embedTagValidator.checkParentConditions("test", Condition(">2"), 3)
-    result2 should be(Right(true))
+    result2.right.get should be(true)
 
     val result3 = embedTagValidator.checkParentConditions("test", Condition(">2"), 1)
-    result3 should be(Right(false))
+    result3.right.get should be(false)
 
     val result4 = embedTagValidator.checkParentConditions("test", Condition(">    2"), 1)
-    result4 should be(Right(false))
+    result4.right.get should be(false)
   }
 
   test("checkParentConditions should work for = operator") {
     val result1 = embedTagValidator.checkParentConditions("test", Condition("apekatt=2"), 3)
-    result1 should be(Left(childCountValidationMessage("test")))
+    result1.left.get should be(childCountValidationMessage("test"))
 
     val result2 = embedTagValidator.checkParentConditions("test", Condition("=2"), 2)
-    result2 should be(Right(true))
+    result2.right.get should be(true)
 
     val result3 = embedTagValidator.checkParentConditions("test", Condition("=2"), 1)
-    result3 should be(Right(false))
+    result3.right.get should be(false)
 
     val result4 = embedTagValidator.checkParentConditions("test", Condition(" =  2 "), 2)
-    result4 should be(Right(true))
+    result4.right.get should be(true)
 
     val result5 = embedTagValidator.checkParentConditions("test", Condition("2"), 1)
-    result5 should be(Left(Seq(ValidationMessage("test", "Could not find supported operator (<, > or =)"))))
+    result5.left.get should be(Seq(ValidationMessage("test", "Could not find supported operator (<, > or =)")))
   }
 
   test("validate should should no longer allow single file embeds with multiple unrelated siblings") {
