@@ -25,6 +25,7 @@ class TextValidator(allowHtml: Boolean) {
     * @param text Text to validate
     * @param validateEmbedTagParent Whether to validate parents of embed tags where those are required.
     * @param requiredToOptional Map from resource-type to Seq of embed tag attributes to treat as optional rather than required for this validation.
+    *                           Example Map("image" -> Seq("data-caption")) to make data-caption optional for "image" on this validation.
     * @return Seq of [[ValidationMessage]]'s describing issues with validation
     */
   def validate(
