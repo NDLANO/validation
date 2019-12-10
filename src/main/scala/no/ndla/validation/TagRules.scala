@@ -65,6 +65,7 @@ object TagAttributes extends Enumeration {
   val DataResource_Id = Value("data-resource_id")
   val DataTitle = Value("data-title")
   val DataType = Value("data-type")
+  val DataAudiotype = Value("data-audiotype")
   val DataYear = Value("data-year")
   val DataEdition = Value("data-edition")
   val DataPublisher = Value("data-publisher")

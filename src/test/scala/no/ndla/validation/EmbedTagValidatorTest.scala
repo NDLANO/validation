@@ -110,7 +110,8 @@ class EmbedTagValidatorTest extends UnitSuite {
         TagAttributes.DataResource -> ResourceType.Audio.toString,
         TagAttributes.DataResource_Id -> "1234",
         TagAttributes.DataCaption -> "",
-        TagAttributes.DataType -> "standard"
+        TagAttributes.DataType -> "standard",
+        TagAttributes.DataAudiotype -> "speech"
       ))
     embedTagValidator.validate("content", tag).size should be(0)
   }

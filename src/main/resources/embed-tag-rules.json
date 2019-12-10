@@ -27,7 +27,10 @@
         "data-type"
       ],
       "optional": [
-        [ "data-caption" ]
+        [
+          "data-caption",
+          "data-audiotype"
+        ]
       ]
     },
     "nrk": {
