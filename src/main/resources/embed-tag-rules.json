@@ -44,7 +44,8 @@
         "data-link-text"
       ],
       "optional": [
-        [ "data-open-in" ]
+        [ "data-open-in" ],
+        [ "data-content-type" ]
       ]
     },
     "brightcove": {
