@@ -61,6 +61,7 @@ object TagAttributes extends Enumeration {
   val DataLinkText = Value("data-link-text")
   val DataOpenIn = Value("data-open-in")
   val DataContentId = Value("data-content-id")
+  val DataContentType = Value("data-content-type")
   val DataNRKVideoId = Value("data-nrk-video-id")
   val DataResource_Id = Value("data-resource_id")
   val DataTitle = Value("data-title")
