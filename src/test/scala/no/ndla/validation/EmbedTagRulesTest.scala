@@ -40,12 +40,14 @@ class EmbedTagRulesTest extends UnitSuite {
     }
 
     val result1 = embedTagValidator.checkParentConditions("test", Condition("apekatt=2"), 3)
-    result1.left.get should be(
-      Seq(
-        ValidationMessage(
-          "test",
-          "Parent condition block is invalid. " +
-            "childCount must start with a supported operator (<, >, =) and consist of an integer (Ex: '> 1').")))
+    result1 should be(
+      Left(
+        Seq(
+          ValidationMessage(
+            "test",
+            "Parent condition block is invalid. " +
+              "childCount must start with a supported operator (<, >, =) and consist of an integer (Ex: '> 1').")))
+    )
   }
 
 }

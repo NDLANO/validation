@@ -4,3 +4,10 @@
 **/target
 **/.DS_Store
 /log
+**/*.iml
+.env
+
+.bloop/
+.metals/
+project/metals.sbt
+
