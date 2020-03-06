@@ -1,7 +1,6 @@
 dist: trusty
 language: scala
-scala:
-- 2.12.8
+scala: 2.13.1
 jdk:
 - oraclejdk8
 sudo: false
