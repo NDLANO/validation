@@ -96,6 +96,7 @@
       "id",
       "href"
     ],
+    "mprescripts": [],
     "mstyle": [
       "scriptsizemultiplier",
       "decimalpoint",
@@ -106,6 +107,7 @@
       "xlink:href",
       "mathbackground",
       "mathcolor",
+      "mathsize",
       "id",
       "href"
     ],
@@ -168,6 +170,7 @@
       "xlink:href",
       "mathbackground",
       "mathcolor",
+      "style",
       "id",
       "href"
     ],
