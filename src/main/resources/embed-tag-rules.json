@@ -14,7 +14,8 @@
         "data-url"
       ],
       "optional": [
-        [ "data-caption", "data-title" ]
+        [ "data-caption" ],
+        [ "data-title" ]
       ]
     },
     "error": {
