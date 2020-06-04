@@ -3,7 +3,10 @@
     "h5p": {
       "required": [
         "data-resource",
-        "data-url"]
+        "data-url"],
+      "optional": [
+        [ "data-title" ]
+      ]
     },
     "external": {
       "required": [
@@ -11,7 +14,7 @@
         "data-url"
       ],
       "optional": [
-        [ "data-caption" ]
+        [ "data-caption", "data-title" ]
       ]
     },
     "error": {
@@ -55,6 +58,9 @@
         "data-videoid",
         "data-account",
         "data-player"
+      ],
+      "optional": [
+        [ "data-title" ]
       ]
     },
     "image": {
@@ -93,9 +99,12 @@
         "data-height"
       ],
       "validSrcDomains": [
-        "prezi.com",
+        "vimeo.com",
         "ndla.filmiundervisning.no",
+        "prezi.com",
+        "commoncraft.com",
         "embed.kahoot.it",
+        "fast.wistia.com",
         ".*.khanacademy.org",
         "khanacademy.org",
         "tv2skole.no",
@@ -120,7 +129,8 @@
         "e.issuu.com",
         "lab.concord.org",
         ".*.worldbank.org",
-        "worldbank.org"
+        "worldbank.org",
+        "embed.molview.org"
       ]
     },
     "footnote": {
