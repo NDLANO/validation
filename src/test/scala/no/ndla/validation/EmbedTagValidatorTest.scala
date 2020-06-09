@@ -127,7 +127,7 @@ class EmbedTagValidatorTest extends UnitSuite {
     val tag = generateTagWithAttrs(
       Map(
         TagAttributes.DataResource -> ResourceType.H5P.toString,
-        TagAttributes.DataUrl -> "http://ndla.no/h5p/embed/1234"
+        TagAttributes.DataPath -> "/h5p/embed/1234"
       ))
     val t = embedTagValidator.validate("content", tag)
     t.size should be(0)

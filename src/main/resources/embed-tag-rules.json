@@ -3,9 +3,10 @@
     "h5p": {
       "required": [
         "data-resource",
-        "data-url"],
+        "data-path"],
       "optional": [
-        [ "data-title" ]
+        [ "data-title" ],
+        [ "data-url" ]
       ]
     },
     "external": {
