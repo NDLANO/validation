@@ -1,8 +1,8 @@
-val scala213 = "2.13.1"
+val scala213 = "2.13.3"
 val scala212 = "2.12.10"
 val Scalaversion = scala213
 
-val ScalaTestVersion = "3.1.1"
+val ScalaTestVersion = "3.2.1"
 val Json4SVersion = "3.6.7"
 
 lazy val supportedScalaVersions = List(
