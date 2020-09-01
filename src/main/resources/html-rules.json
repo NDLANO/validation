@@ -108,6 +108,16 @@
       ]
     }
   },
+  "pre": {
+    "optional": [
+      [
+        "data-content"
+      ],
+      [
+        "data-format"
+      ]
+    ]
+  },
   "tags": [
     "pre",
     "em",
