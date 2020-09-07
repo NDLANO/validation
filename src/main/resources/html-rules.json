@@ -76,6 +76,9 @@
       "optional": [
         [
           "data-type"
+        ],
+        [
+          "start"
         ]
       ]
     },
@@ -100,6 +103,16 @@
         ]
       ]
     },
+    "pre": {
+      "optional": [
+        [
+          "data-format"
+        ],
+        [
+          "data-content"
+        ]
+      ]
+    },
     "details": {
       "optional": [
         [
@@ -107,16 +120,6 @@
         ]
       ]
     }
-  },
-  "pre": {
-    "optional": [
-      [
-        "data-content"
-      ],
-      [
-        "data-format"
-      ]
-    ]
   },
   "tags": [
     "pre",
