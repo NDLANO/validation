@@ -103,16 +103,6 @@
         ]
       ]
     },
-    "pre": {
-      "optional": [
-        [
-          "data-format"
-        ],
-        [
-          "data-content"
-        ]
-      ]
-    },
     "details": {
       "optional": [
         [
