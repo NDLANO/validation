@@ -51,6 +51,7 @@ object ResourceType extends Enumeration {
   val NRKContent = Value("nrk")
   val ConceptLink = Value("concept")
   val FootNote = Value("footnote")
+  val CodeBlock = Value("code-block")
   val RelatedContent = Value("related-content")
   val File = Value("file")
 

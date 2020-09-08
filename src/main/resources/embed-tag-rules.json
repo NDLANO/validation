@@ -146,6 +146,13 @@
         "data-authors"
       ]
     },
+    "code-block": {
+      "required": [
+        "data-resource",
+        "data-code-format",
+        "data-code-content"
+      ]
+    },
     "related-content": {
       "mustContainAtLeastOneOptionalAttribute": true,
       "required": [
