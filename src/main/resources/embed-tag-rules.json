@@ -90,7 +90,8 @@
       "required": [
         "data-resource",
         "data-content-id",
-        "data-link-text"
+        "data-link-text",
+        "data-type"
       ]
     },
     "iframe": {
