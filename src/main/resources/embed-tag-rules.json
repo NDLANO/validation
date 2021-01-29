@@ -186,7 +186,7 @@
       "optional": [
         [ "data-type" ],
         [ "data-alt" ],
-        [ "data-render-inline" ]
+        [ "data-display" ]
       ],
       "mustBeDirectChildOf": {
         "name": "div",
