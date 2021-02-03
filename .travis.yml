@@ -1,16 +1,17 @@
-dist: trusty
+dist: focal
 language: scala
-scala: 2.13.1
+scala: 2.13.3
 jdk:
-- oraclejdk8
-sudo: false
+- openjdk11
 cache:
   directories:
   - $HOME/.ivy2/cache
   - $HOME/.sbt/boot/
 before_cache:
-- find $HOME/.ivy2 -name "ivydata-*.properties" -delete
-- find $HOME/.sbt -name "*.lock" -delete
+  - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+  - find $HOME/.sbt -name "*.lock" -delete
+before_script:
+  - echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin
 notifications:
   slack:
     rooms:
