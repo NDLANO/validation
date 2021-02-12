@@ -1,5 +1,5 @@
 # Validation
-[![Build Status](https://travis-ci.org/NDLANO/validation.svg?branch=master)](https://travis-ci.org/NDLANO/validation)
+![CI](https://github.com/NDLANO/validation/workflows/CI/badge.svg)
 
 Library that provides common validation rules for NDLA components
 
