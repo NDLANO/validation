@@ -153,6 +153,9 @@
         "data-resource",
         "data-code-format",
         "data-code-content"
+      ],
+      "optional": [
+        [ "data-title" ]
       ]
     },
     "related-content": {
