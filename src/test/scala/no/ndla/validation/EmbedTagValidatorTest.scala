@@ -294,9 +294,19 @@ class EmbedTagValidatorTest extends UnitSuite {
         TagAttributes.DataUrl -> "https://prezi.com",
         TagAttributes.DataWidth -> "1",
         TagAttributes.DataHeight -> "1"
-      ))
-
+      )
+    )
     embedTagValidator.validate("content", tag).size should be(0)
+
+    val tag2 = generateTagWithAttrs(
+      Map(
+        TagAttributes.DataResource -> ResourceType.IframeContent.toString,
+        TagAttributes.DataUrl -> "https://statisk.test.ndla.no",
+        TagAttributes.DataWidth -> "1",
+        TagAttributes.DataHeight -> "1"
+      )
+    )
+    embedTagValidator.validate("content", tag2).size should be(0)
   }
 
   test("validate should fail if source url is from an illlegal domain") {
