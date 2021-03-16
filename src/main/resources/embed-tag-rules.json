@@ -102,6 +102,7 @@
         "data-height"
       ],
       "validSrcDomains": [
+        ".*.ndla.no",
         "vimeo.com",
         "ndla.filmiundervisning.no",
         "prezi.com",
