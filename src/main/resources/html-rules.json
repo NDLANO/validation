@@ -4,14 +4,20 @@
       "mustContainAtLeastOneOptionalAttribute": true,
       "optional": [["lang"], ["data-size"]]
     },
+    "colgroup": {
+      "optional": [["span"], ["style"]]
+    },
+    "col": {
+      "optional": [["span"], ["style"]]
+    },
     "div": {
       "optional": [["class"], ["data-type"]]
     },
     "td": {
-      "optional": [["valign"], ["align"], ["colspan"], ["rowspan"]]
+      "optional": [["valign"], ["align"], ["colspan"], ["rowspan"], ["id"]]
     },
     "th": {
-      "optional": [["valign"], ["align"], ["colspan"], ["rowspan"]]
+      "optional": [["valign"], ["align"], ["colspan"], ["rowspan"], ["id"]]
     },
     "a": {
       "optional": [["href"], ["title"], ["name"], ["target"], ["rel"]]
