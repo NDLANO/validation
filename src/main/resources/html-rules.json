@@ -17,7 +17,14 @@
       "optional": [["valign"], ["align"], ["colspan"], ["rowspan"], ["id"]]
     },
     "th": {
-      "optional": [["valign"], ["align"], ["colspan"], ["rowspan"], ["id"]]
+      "optional": [
+        ["valign"],
+        ["align"],
+        ["colspan"],
+        ["rowspan"],
+        ["id"],
+        ["scope"]
+      ]
     },
     "a": {
       "optional": [["href"], ["title"], ["name"], ["target"], ["rel"]]

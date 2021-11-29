@@ -100,6 +100,7 @@ object TagAttributes extends Enumeration {
   val Style = Value("style")
   val Span = Value("span")
   val Id = Value("id")
+  val Scope = Value("scope")
 
   private[validation] def getOrCreate(s: String): TagAttributes.Value = {
     valueOf(s).getOrElse(Value(s))
