@@ -11,6 +11,26 @@
         ]
       ]
     },
+    "colgroup": {
+      "optional": [
+        [
+          "span"
+        ],
+        [
+          "style"
+        ]
+      ]
+    },
+    "col": {
+      "optional": [
+        [
+          "span"
+        ],
+        [
+          "style"
+        ]
+      ]
+    },
     "div": {
       "optional": [
         [
@@ -34,6 +54,9 @@
         ],
         [
           "rowspan"
+        ],
+        [
+          "id"
         ]
       ]
     },
@@ -50,6 +73,12 @@
         ],
         [
           "rowspan"
+        ],
+        [
+          "id"
+        ],
+        [
+          "scope"
         ]
       ]
     },
@@ -143,6 +172,9 @@
     "audio",
     "tfoot",
     "td",
-    "th"
+    "th",
+    "caption",
+    "colgroup",
+    "col"
   ]
 }
