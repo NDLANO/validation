@@ -2,47 +2,142 @@
   "attributes": {
     "span": {
       "mustContainAtLeastOneOptionalAttribute": true,
-      "optional": [["lang"], ["data-size"]]
+      "optional": [
+        [
+          "lang"
+        ],
+        [
+          "data-size"
+        ]
+      ]
     },
     "colgroup": {
-      "optional": [["span"], ["style"]]
+      "optional": [
+        [
+          "span"
+        ],
+        [
+          "style"
+        ]
+      ]
     },
     "col": {
-      "optional": [["span"], ["style"]]
+      "optional": [
+        [
+          "span"
+        ],
+        [
+          "style"
+        ]
+      ]
     },
     "div": {
-      "optional": [["class"], ["data-type"]]
+      "optional": [
+        [
+          "class"
+        ],
+        [
+          "data-type"
+        ]
+      ]
     },
     "td": {
-      "optional": [["valign"], ["align"], ["colspan"], ["rowspan"], ["id"]]
+      "optional": [
+        [
+          "valign"
+        ],
+        [
+          "align"
+        ],
+        [
+          "colspan"
+        ],
+        [
+          "rowspan"
+        ],
+        [
+          "id"
+        ]
+      ]
     },
     "th": {
       "optional": [
-        ["valign"],
-        ["align"],
-        ["colspan"],
-        ["rowspan"],
-        ["id"],
-        ["scope"]
+        [
+          "valign"
+        ],
+        [
+          "align"
+        ],
+        [
+          "colspan"
+        ],
+        [
+          "rowspan"
+        ],
+        [
+          "id"
+        ],
+        [
+          "scope"
+        ]
       ]
     },
     "a": {
-      "optional": [["href"], ["title"], ["name"], ["target"], ["rel"]]
+      "optional": [
+        [
+          "href"
+        ],
+        [
+          "title"
+        ],
+        [
+          "name"
+        ],
+        [
+          "target"
+        ],
+        [
+          "rel"
+        ]
+      ]
     },
     "ol": {
-      "optional": [["data-type"], ["start"]]
+      "optional": [
+        [
+          "data-type"
+        ],
+        [
+          "start"
+        ]
+      ]
     },
     "aside": {
-      "optional": [["data-type"]]
+      "optional": [
+        [
+          "data-type"
+        ]
+      ]
     },
     "p": {
-      "optional": [["data-align"]]
+      "optional": [
+        [
+          "data-align"
+        ]
+      ]
     },
     "ul": {
-      "optional": [["data-type"]]
+      "optional": [
+        [
+          "data-type"
+        ]
+      ]
     },
     "details": {
-      "optional": [["class"]]
+      "optional": [
+        [
+          "class"
+        ]
+      ]
     }
   },
   "tags": [
