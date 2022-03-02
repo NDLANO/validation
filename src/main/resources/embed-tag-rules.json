@@ -90,8 +90,10 @@
       "required": [
         "data-resource",
         "data-content-id",
-        "data-link-text",
         "data-type"
+      ],
+      "optional": [
+        "data-link-text",
       ]
     },
     "iframe": {
